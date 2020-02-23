@@ -147,8 +147,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 336.6, y: -339.95}
-  m_SizeDelta: {x: 397.72, y: 398.86}
+  m_AnchoredPosition: {x: 336.1, y: -340.33997}
+  m_SizeDelta: {x: 399.45, y: 400.46997}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &52376726
 MonoBehaviour:
@@ -179,7 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -199,7 +199,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 659715778}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -208,7 +208,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!1 &488976034
 GameObject:
@@ -297,7 +297,7 @@ GameObject:
   m_Component:
   - component: {fileID: 544228653}
   - component: {fileID: 544228654}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Sound_Button_Press
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -425,7 +425,7 @@ GameObject:
   - component: {fileID: 659715779}
   - component: {fileID: 659715778}
   - component: {fileID: 659715777}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -784,6 +784,7 @@ GameObject:
   - component: {fileID: 1609726074}
   - component: {fileID: 1609726073}
   - component: {fileID: 1609726077}
+  - component: {fileID: 1609726078}
   m_Layer: 5
   m_Name: Game_UI
   m_TagString: Untagged
@@ -897,6 +898,19 @@ MonoBehaviour:
   - {fileID: 21300000, guid: f3ece3a3c8e455e4ab9d6503c68dfed7, type: 3}
   - {fileID: 21300000, guid: f43c76f8eafadf44e9013b53ee5da56d, type: 3}
   - {fileID: 21300000, guid: aa83d1ba33c5b534d9b692b2ee98ec8a, type: 3}
+  Board_TileData: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+--- !u!114 &1609726078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609726072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd8137623b28967438a3568e6c2d0f85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1771001909
 GameObject:
   m_ObjectHideFlags: 0

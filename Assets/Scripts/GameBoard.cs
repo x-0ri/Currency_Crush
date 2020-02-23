@@ -9,18 +9,21 @@ public class GameBoard : MonoBehaviour
     [Header("Prefabs")]
     public GameObject TilePiece; //cos z instancjonowaniem
     public Sprite[] Orbs;
+    public TilePiece piece;
 
-    static int width = 12; //inicjalizacja wartosci szerokosci planszy
-    static int height = 12; //inicjalizacja wartosci wysokosci planszy
+    static readonly int width = 12; //inicjalizacja wartosci szerokosci planszy
+    static readonly int height = 12; //inicjalizacja wartosci wysokosci planszy
     Tile[,] Board; //inicjalizacja matrycy elementów
     public static string[] Currencies = { "Orb_Of_Alteration", "Jewellers_Orb", "Orb_Of_Alchemy", "Orb_Of_Fusing", "Vaal_Orb" , "Chaos_Orb" , "Exalted_Orb", "Mirror_Of_Kalandra", };
     public static int amount_of_currency_types = Currencies.Length; // deklaracja wartosci ilosci typow currency
     public int[] Board_TileData = new int[width * height]; //utwórz reprezentacje jednowymiarowa matrycy
 
+    List<TilePiece> update;
+
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Initialization of void Start() : Success");
+        update = new List<TilePiece>();
         InitializeBoard();
         VerifyBoardInitialization();
         InstantiateBoard();
@@ -96,12 +99,31 @@ public class GameBoard : MonoBehaviour
         Debug.Log("Instantiation of the board : Success");
     }
 
-    
-    
+    public Vector2 GetPositionFromPoint(Point p)
+    {
+        return new Vector2(-182 + (33 * p.x), -182 + (33 * p.y)); //nie wiem ale dziala
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+        List<TilePiece> finishedUpdating = new List<TilePiece>();
+        for (int i = 0; i < update.Count; i++)
+        {
+            TilePiece piece = update[i];
+            if (!piece.UpdatePiece()) finishedUpdating.Add(piece);
+        }
+        for (int i = 0; i < finishedUpdating.Count; i++)
+        {
+            TilePiece piece = finishedUpdating[i];
+            update.Remove(piece);
+        }
+    }
+
+    public void ResetPiece(TilePiece piece)
+    {
+        piece.ResetPosition();
+        update.Add(piece);
     }
 }
 
