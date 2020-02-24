@@ -6,10 +6,11 @@ public class MovePieces : MonoBehaviour
 {
     public static MovePieces instance;
     GameBoard game;
+
     TilePiece moving;
     Point NewIndex;
     Vector2 mouseStart; // utwórz nowy wektor ktory zapisze pozycje myszki przy kliknieciu
-    public Vector2 move_direction_vector; //docelowo wartosc [1,0] itp aby wskazac kierunek zamiany indeksu
+
     private void Awake()
     {
         instance = this;    
@@ -28,10 +29,11 @@ public class MovePieces : MonoBehaviour
         if (moving == null) return; // jeżeli bool moving ma wartość null
         Debug.Log("Dropped");
         //if (!NewIndex.Equals(moving.index))        
-            //game.FlipPieces(moving.index, NewIndex);
-        
+        //game.FlipPieces(moving.index, NewIndex);
+
         //else        
-            game.ResetPiece(piece); //wywołaj funkcje ResetPiece
+        game.FlipPieces(moving.index, NewIndex);
+        game.ResetPiece(piece); //wywołaj funkcje ResetPiece
         
         moving = null;
                    
@@ -73,7 +75,6 @@ public class MovePieces : MonoBehaviour
 
             if (!NewIndex.Equals(moving.index))             //jezeli funkcja NewIndex typu Point zwroci true to :
             {
-                move_direction_vector = pos;
                 pos += Point.Multiply(add, 10).ToVector();   //dodaj do zmiennej "pos" typu Vector2 nowy wektor kierunkowy o dlugosci 10
             }
 

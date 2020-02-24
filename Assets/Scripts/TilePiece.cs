@@ -12,12 +12,13 @@ public class TilePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     bool updating;
     Image img;
 
+    public TilePiece flipped;
+
     [HideInInspector]
     public Vector2 pos;
     [HideInInspector]
     public RectTransform rect;
-    [HideInInspector]
-    public TilePiece flipped = null;
+    
 
     public void Initialize(int v, Point p, Sprite orb)
     {

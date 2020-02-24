@@ -51,6 +51,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currency_type: 0
+  index:
+    x: 0
+    y: 0
+  flipped: {fileID: 0}
   pos: {x: 0, y: 0}
   rect: {fileID: 0}
 --- !u!222 &2797234931318261833
