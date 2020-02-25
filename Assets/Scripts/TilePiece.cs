@@ -9,22 +9,19 @@ public class TilePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public int currency_type;   //0 - x -> ta wartosc odpowiada za rodzaj currency
     public Point index;
     
-    bool updating;
-    Image img;
-
-    public TilePiece flipped;
-
     [HideInInspector]
     public Vector2 pos;
     [HideInInspector]
     public RectTransform rect;
-    
+
+    bool updating;
+    Image img;
 
     public void Initialize(int v, Point p, Sprite orb)
     {
-        flipped = null; 
         img = GetComponent<Image>();
         rect = GetComponent<RectTransform>();
+
         currency_type = v;
         SetIndex(p);
         img.sprite = orb;
@@ -33,7 +30,7 @@ public class TilePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     } // coś z podmianą obrazka
     public void ResetPosition()
     {
-        pos = new Vector2(-182 + (33 * index.x), -182 + (33 * index.y)); //nie wiem ale dziala
+        pos = new Vector2(-182 + (33 * index.x), -181 + (33 * index.y)); //nie wiem ale dziala
     }
     public void SetIndex(Point p)
     {
@@ -48,13 +45,13 @@ public class TilePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public bool UpdatePiece() // funkcja zwracająca true jeżeli element jest w ruchu i false jeżeli jest w miejscu
     {
-        if (Vector2.Distance(rect.anchoredPosition, pos) > 1) // jeżeli długość wektora róznicy starej i nowej poycji jest > 1 to :
+        if (Vector3.Distance(rect.anchoredPosition, pos) > 1) // jeżeli długość wektora róznicy starej i nowej poycji jest > 1 to :
         {
             MovePositionTo(pos);    // wywołaj funkcje moveposition z parametrem pos
             updating = true;        // zwróć wartość true dla zmiennej updating
             return true;            // funkcja zwraca true
         }
-        else // jeżeli długość wektora róznicy starej i nowej poycji jest < 1 to :
+        else // jeżeli długość wektora róznicy starej i nowej poycji jest > 1 to :
         {
             rect.anchoredPosition = pos;    //zachowaj pozycje
             updating = false;               // zwróć wartość false dla zmiennej updating
@@ -63,23 +60,24 @@ public class TilePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     public void MovePosition(Vector2 move)
     {
-        //rect.anchoredPosition = Vector2.Lerp(rect.anchoredPosition, move, Time.deltaTime * 10f); płynne
-        rect.anchoredPosition = move;
+        //rect.anchoredPosition += Vector2.Lerp(rect.anchoredPosition, move, Time.deltaTime * 10f);
+        rect.anchoredPosition += move * Time.deltaTime * 10f;
+        //rect.anchoredPosition = move;
     }
     public void MovePositionTo(Vector2 moveto)
     {
         rect.anchoredPosition = Vector2.Lerp(rect.anchoredPosition,moveto,Time.deltaTime * 10f);
     }
-    void IPointerDownHandler.OnPointerDown(PointerEventData eventData) //MouseButtonDown handler
+    public void OnPointerDown(PointerEventData eventData) //MouseButtonDown handler
     {
         if (updating) return;
         //Debug.Log("Grab " + transform.name);
         MovePieces.instance.MovePiece(this);
     }
 
-    void IPointerUpHandler.OnPointerUp(PointerEventData eventData) //MouseButtonUp handler
+    public void OnPointerUp(PointerEventData eventData) //MouseButtonUp handler
     {
-        MovePieces.instance.DropPiece(this); //wywołaj funkcje droppiece
+        MovePieces.instance.DropPiece(); //wywołaj funkcje droppiece
         //Debug.Log("Drop " + transform.name);
     }
 

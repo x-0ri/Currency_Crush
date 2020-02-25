@@ -8,7 +8,6 @@ public class MovePieces : MonoBehaviour
     GameBoard game;
 
     TilePiece moving;
-    TilePiece CheckIfOnBorder;
     Point NewIndex;
     Vector2 mouseStart; // utwórz nowy wektor ktory zapisze pozycje myszki przy kliknieciu
 
@@ -26,16 +25,14 @@ public class MovePieces : MonoBehaviour
         //Debug.Log("Clicked mouse on position : " + mouseStart.x + " , " + mouseStart.y);
     }
 
-    public void DropPiece(TilePiece piece)
+    public void DropPiece()
     {
         if (moving == null) return; // jeżeli bool moving ma wartość null
-        //Debug.Log("Dropped");
-        //if (!NewIndex.Equals(moving.index))        
-        //game.FlipPieces(moving.index, NewIndex);
-
-        //else        
-        game.FlipPieces(moving.index, NewIndex);
-        game.ResetPiece(piece); //wywołaj funkcje ResetPiece
+        Debug.Log("Dropped");
+        if (!NewIndex.Equals(moving.index))
+            game.FlipPieces(moving.index, NewIndex, true);
+        else
+            game.ResetPiece(moving); //wywołaj funkcje ResetPiece
         
         moving = null;
                    
@@ -145,7 +142,7 @@ public class MovePieces : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (moving != null)// jeśli bool moving jest rózny on null 
+        if (moving != null) // jeśli bool moving jest rózny on null 
         {
             Vector2 dir = ((Vector2)Input.mousePosition - mouseStart);      //inicjalizuj wektor kierunkowy 
             Vector2 ndir = dir.normalized;                                  //utwórz wektor jednostkowy z "dir"
@@ -256,11 +253,8 @@ public class MovePieces : MonoBehaviour
                         }//jeżeli dlugosc wektora kierunkowego jest > 16 to:
                         break;
                     }
-            }
+            } // ogranicz tworzenie wektora kierunkowego w zależnoeści od pozycji na planszy
             
-                
-        
-
             NewIndex.Add_indirect(add); // dodaj do zmiennej typu Point NewIndex zmienną add, jeden z wariantów : (1,0), (-1,0), (0,1), (0,-1)
             Vector2 pos = game.GetPositionFromPoint(moving.index);
             //utwórz wektor[x,y] "pos" o wartosci pozycji obecnego elementu. 
