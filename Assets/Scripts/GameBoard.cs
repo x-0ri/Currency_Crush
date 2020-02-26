@@ -15,12 +15,12 @@ public class GameBoard : MonoBehaviour
     static readonly int board_size = 12; //inicjalizacja wielkości planszy
     Tile[,] Tile; //inicjalizacja matrycy elementów
     
-    public static string[] Currencies = { "Orb_Of_Alteration", "Jewellers_Orb", "Orb_Of_Alchemy", "Orb_Of_Fusing", "Vaal_Orb", "Chaos_Orb", "Exalted_Orb", "Mirror_Of_Kalandra", };
-    public static int amount_of_currency_types = Currencies.Length; // deklaracja wartosci ilosci typow currency
+    public static int amount_of_currency_types = 12; // deklaracja wartosci ilosci typow currency
     public int[] Board_TileData = new int[board_size * board_size]; //utwórz reprezentacje jednowymiarowa matrycy do przechowywania wartości currency_type
 
     List<TilePiece> update;
     List<FlippedPieces> flipped;
+    List<TilePiece> dead;
     //List<Point> matched; // lista w której przechowywane będą punkty dopasowania
 
     // Start is called before the first frame update
@@ -28,7 +28,7 @@ public class GameBoard : MonoBehaviour
     {
         update = new List<TilePiece>();
         flipped = new List<FlippedPieces>();
-
+        dead = new List<TilePiece>();
         InitializeBoard();
         VerifyBoardInitialization();
         InstantiateBoard();
@@ -41,7 +41,7 @@ public class GameBoard : MonoBehaviour
             for (int y = 0; y < board_size; y++) //podwojny for - obsluga matrycy 2D
             {
 
-                Tile[x, y] = new Tile(Mathf.CeilToInt(Random.Range(0, amount_of_currency_types)), new Point(x, y));
+                Tile[x, y] = new Tile(Mathf.CeilToInt(Random.Range(1, amount_of_currency_types-3)), new Point(x, y));
                 //utwórz matryce 2D o typie Tile i parametrach  (lowowe 0 - ilosc typow currency , zmienna typu Point o wspolrzednych x i y)
                 Board_TileData[x + y * board_size] = Tile[x, y].currency_type; //wpisz wartosc currency_type do reprezentacji 1D
 
@@ -58,7 +58,7 @@ public class GameBoard : MonoBehaviour
             for (int y = 0; y < board_size; y++) //podwojny for - obsluga matrycy 2D
             {
                 Point p = new Point(x, y);
-                int val = GetCurrencyTypeAtPoint(p);
+                int val; // = GetCurrencyTypeAtPoint(p);
 
                 remove = new List<int>();
                 while (IsConnected(p, true).Count > 0)
@@ -67,7 +67,7 @@ public class GameBoard : MonoBehaviour
                     if (!remove.Contains(val))
                         remove.Add(val);
 
-                    SetCurrencyTypeAtPoint(p, Mathf.CeilToInt(Random.Range(0, amount_of_currency_types)));
+                    SetCurrencyTypeAtPoint(p, Mathf.CeilToInt(Random.Range(1, amount_of_currency_types-3)));
                 }
             }
         }
@@ -114,6 +114,49 @@ public class GameBoard : MonoBehaviour
         Debug.Log("Instantiation of the board : Success");
     }
 
+    public void ApplyGravityToBoard()
+    {
+        for (int x = 0; x < board_size; x++) // idż od x = 0 do x = 11
+        {
+            for (int y = 0; y < board_size ; y++) // idź od y = 11 do y = 0
+            {
+                Point p = new Point(x, y);
+                Tile tile = GetTileAtPoint(p);
+                int currency_type = GetCurrencyTypeAtPoint(p);
+
+                if (currency_type != 0) continue;
+
+                for (int ny = (y + 1); ny < board_size; ny++) // idź od y - 1 do -1
+                {
+                    Point next = new Point(x, ny);
+                    int nextCurrency_type = GetCurrencyTypeAtPoint(next);
+                    if (nextCurrency_type == 0) // very important, idk why but if it gets commented update gets miscounted which results in NullException
+                       continue;
+                    if (nextCurrency_type != -1)
+                    {
+                        Tile got = GetTileAtPoint(next);
+                        TilePiece piece = got.GetPiece();
+
+                        //Set the hole
+                        tile.SetPiece(piece);
+                        update.Add(piece);
+
+                        //Replace the hole
+                        got.SetPiece(null);
+                    }
+                    else //Hit an end
+                    {
+                        //int newCurrencyType = Mathf.CeilToInt(Random.Range(1, amount_of_currency_types - 3));
+
+                        //fill the hole
+                    }
+                    break;
+                }
+
+            
+            }
+        }
+    }
     public Vector2 GetPositionFromPoint(Point p)
     {
         return new Vector2(-182 + (33 * p.x), -181 + (33 * p.y)); //nie wiem ale dziala
@@ -127,7 +170,6 @@ public class GameBoard : MonoBehaviour
         {
             TilePiece piece = update[i];                           // utwórz zmienną będącą indeksem i z Listy updated
             if (!piece.UpdatePiece()) finishedUpdating.Add(piece); // dodaj do listy finishedUpdating piece
-
         }
         //Debug.Log(finishedUpdating.Count);
         for (int i = 0; i < finishedUpdating.Count; i++)
@@ -162,9 +204,16 @@ public class GameBoard : MonoBehaviour
                     if (tilepiece != null)
                     {
                         tilepiece.gameObject.SetActive(false);
+                        dead.Add(tilepiece);
+                        //tilepiece.currency_type = -1;
+                        
+                        Debug.Log(dead.Count); // zlicz ile elementów zostało zniszczonych w danym ruchu
                     }
                     tile.SetPiece(null);
                 }
+
+                ApplyGravityToBoard();
+                //wypełnij powstałe luki
             }
             
             flipped.Remove(flip); //usuń element flip po zaktualizowaniu
@@ -198,8 +247,9 @@ public class GameBoard : MonoBehaviour
 
         Tile tileOne = GetTileAtPoint(origin);          //utwórz lokalną zmienną typu Tile -> trzymany na myszce
         TilePiece pieceOne = tileOne.GetPiece();        //utwórz lokalną zmienną typu TilePiece -> trzmany na myszce
-               
 
+        if (GetCurrencyTypeAtPoint(destination) > 0)
+        {
             Tile tileTwo = GetTileAtPoint(destination);     //utwórz lokalną zmienną typu Tile -> element do zamiany
             TilePiece pieceTwo = tileTwo.GetPiece();        //utwórz lokalną zmienną typu TilePiece -> element do zamiany
 
@@ -211,7 +261,8 @@ public class GameBoard : MonoBehaviour
 
             update.Add(pieceOne);
             update.Add(pieceTwo);
-        
+        }
+        else        
             ResetPiece(pieceOne);
     }
 
@@ -230,7 +281,7 @@ public class GameBoard : MonoBehaviour
         Tile[p.x, p.y].currency_type = v;
     }
 
-    List<Point> IsConnected(Point p, bool main)
+    List<Point> IsConnected(Point p, bool main_call)
     {
         List<Point> connected = new List<Point>();
         int currency_type = GetCurrencyTypeAtPoint(p);
@@ -247,6 +298,8 @@ public class GameBoard : MonoBehaviour
             List<Point> line = new List<Point>();   //utwórz listę zawierającą 
 
             int same = 0; // licznik wartości currency_type
+
+
             for (int i = 1; i < 3; i++)
             {
                 Point check = Point.Add(p, Point.Multiply(dir, i));
@@ -280,16 +333,11 @@ public class GameBoard : MonoBehaviour
                 AddPoints(ref connected, line);
         }//Checking if we are in the middle of two of the same shapes
 
-        if (main) //Checks for other matches along the current match
+        if (main_call) //Checks for other matches along the current match
         {
             for (int i = 0; i < connected.Count; i++)
                 AddPoints(ref connected, IsConnected(connected[i], false));
         }//Checks for other matches along the current match
-
-        /* UNNESSASARY | REMOVE THIS!
-        if (connected.Count > 0)
-            connected.Add(p);
-        */
 
         return connected;
     }
