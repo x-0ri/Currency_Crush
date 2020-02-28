@@ -27,8 +27,9 @@ public class MovePieces : MonoBehaviour
 
     public void DropPiece()
     {
+        game.ComboCounter = 0;
         if (moving == null) return; // jeżeli bool moving ma wartość null
-        Debug.Log("Dropped");
+        //Debug.Log("Dropped");
         if (!NewIndex.Equals(moving.index))
             game.FlipPieces(moving.index, NewIndex, true);
         else
@@ -63,62 +64,62 @@ public class MovePieces : MonoBehaviour
 
         if (CheckIfOnBorder.x == 0 && CheckIfOnBorder.y == 0)
         {
-            Debug.Log("Area : 1");
+            //Debug.Log("Area : 1");
             return 1;
         }
         else
         {
             if (CheckIfOnBorder.x == 0 && CheckIfOnBorder.y == board_size - 1)
             {
-                Debug.Log("Area : 2");
+                //Debug.Log("Area : 2");
                 return 2;
             }
             else
             {
                 if (CheckIfOnBorder.x == board_size - 1 && CheckIfOnBorder.y == board_size - 1)
                 {
-                    Debug.Log("Area : 3");
+                    //Debug.Log("Area : 3");
                     return 3;
                 }
                 else
                 {
                     if (CheckIfOnBorder.x == board_size - 1 && CheckIfOnBorder.y == 0)
                     {
-                        Debug.Log("Area : 4");
+                        //Debug.Log("Area : 4");
                         return 4;
                     }
                     else
                     {
                         if (CheckIfOnBorder.x > 0 && CheckIfOnBorder.x < board_size - 1 && CheckIfOnBorder.y == 0)
                         {
-                            Debug.Log("Area : 5");
+                            //Debug.Log("Area : 5");
                             return 5;
                         }
                         else
                         {
                             if (CheckIfOnBorder.y > 0 && CheckIfOnBorder.y < board_size - 1 && CheckIfOnBorder.x == 0)
                             {
-                                Debug.Log("Area : 6");
+                                //Debug.Log("Area : 6");
                                 return 6;
                             }
                             else
                             {
                                 if (CheckIfOnBorder.x > 0 && CheckIfOnBorder.x < board_size - 1 && CheckIfOnBorder.y == board_size - 1)
                                 {
-                                    Debug.Log("Area : 7");
+                                    //Debug.Log("Area : 7");
                                     return 7;
                                 }
                                 else
                                 {
                                     if (CheckIfOnBorder.y > 0 && CheckIfOnBorder.y < board_size - 1 && CheckIfOnBorder.x == board_size - 1)
                                     {
-                                        Debug.Log("Area : 8");
+                                        //Debug.Log("Area : 8");
                                         return 8;
                                     }
                                     else
                                     {
                                         {
-                                            Debug.Log("Area : 9");
+                                            //Debug.Log("Area : 9");
                                             return 9;
                                         }
                                     }

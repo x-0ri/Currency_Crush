@@ -9,6 +9,7 @@ public class GameBoard : MonoBehaviour
     public Sprite[] Orbs;
     public RectTransform gameBoard; //nie wiem ale dziala  
     public Text Score;
+    public Text ComboBreaker;
 
     [Header("Prefabs")]
     public GameObject Tile_Piece; //cos z instancjonowaniem
@@ -16,13 +17,13 @@ public class GameBoard : MonoBehaviour
     static readonly int board_size = 12; //inicjalizacja wielkości planszy
     Tile[,] Tile; //inicjalizacja matrycy elementów
     
-    public static int amount_of_currency_types = 12; // deklaracja wartosci ilosci typow currency
-    public int[] Board_TileData = new int[board_size * board_size]; //utwórz reprezentacje jednowymiarowa matrycy do przechowywania wartości currency_type
-
+    public static int amount_of_currency_types = 13; // deklaracja wartosci ilosci typow currency
+   
     List<TilePiece> update;
     List<FlippedPieces> flipped;
     List<TilePiece> dead;
-    public int TotalDestroyedOrbsCounter;   
+    public int TotalDestroyedOrbsCounter;
+    public int ComboCounter;
 
     // Start is called before the first frame update
     void Start()
@@ -45,8 +46,7 @@ public class GameBoard : MonoBehaviour
 
                 Tile[x, y] = new Tile(RollCurrencyType(), new Point(x, y));
                 //utwórz matryce 2D o typie Tile i parametrach  (lowowe 0 - ilosc typow currency , zmienna typu Point o wspolrzednych x i y)
-                Board_TileData[x + y * board_size] = Tile[x, y].currency_type; //wpisz wartosc currency_type do reprezentacji 1D
-
+                
             }
         }
         Debug.Log("Initialization of the board : Success");
@@ -74,23 +74,6 @@ public class GameBoard : MonoBehaviour
             }
         }
         Debug.Log("Eliminating starting matches - completed");
-    }
-
-    public bool VerificationFindMatch3(int x, int y) //used for board verification
-    {
-        if (x >= 2 && Board_TileData[x + y * board_size] == Board_TileData[(x - 1) + (y * board_size)]
-                   && Board_TileData[(x - 1) + (y * board_size)] == Board_TileData[(x - 2) + (y * board_size)]
-        ||  y >= 2 && Board_TileData[x + y * board_size] == Board_TileData[x + ((y - 1) * board_size)]
-                   && Board_TileData[x + ((y - 1) * board_size)] == Board_TileData[x + ((y - 2) * board_size)])
-        //      po ludzku : tak dlugo jak x >= 2 i trzy kolejne pola są identyczne w poziomie
-        //      lub :       tak długo jak y >= 2 i trzy kolejne pola są identyczne w pionie
-        //                  wykonuj pętle :
-        {
-            return true;
-        }
-
-        else
-            return false;
     }
 
     void InstantiateBoard() //instancjonowanie planszy
@@ -195,20 +178,26 @@ public class GameBoard : MonoBehaviour
     void Update()
     {
         List<TilePiece> finishedUpdating = new List<TilePiece>();   // utwórz listę elementów których uaktualnianie się zakończyło
+
         for (int i = 0; i < update.Count; i++)                     // pętla for powtarzająca się 
         {
             TilePiece piece = update[i];                           // utwórz zmienną będącą indeksem i z Listy updated
             if (!piece.UpdatePiece()) finishedUpdating.Add(piece); // dodaj do listy finishedUpdating piece
         }
         //Debug.Log(finishedUpdating.Count);
+        //ComboCounter = 0;
+
         for (int i = 0; i < finishedUpdating.Count; i++)
         {
             TilePiece piece = finishedUpdating[i];                  // utwórz zmienną typu TilePiece o wartości indeksu listy finishedupdating
             //Debug.Log(finishedUpdating[i]);
             FlippedPieces flip = GetFlipped(piece);                 //
-            TilePiece flippedPiece = null;       
+            TilePiece flippedPiece = null;
+
 
             List<Point> matched = IsConnected(piece.index, true);
+            List<Point> secondary_matched = new List<Point>();
+            //ComboCounter = 0;
 
             bool wasFlipped = (flip != null);
 
@@ -221,37 +210,262 @@ public class GameBoard : MonoBehaviour
             if (matched.Count == 0) // jeżeli nie stworzone zostało dopasowanie
             {
                 if (wasFlipped) // jeśli zamienione zostały elementy
-                FlipPieces(piece.index, flippedPiece.index, false); // nie zamieniaj pozycji elementów
+                    FlipPieces(piece.index, flippedPiece.index, false); // nie zamieniaj pozycji elementów
             }
 
             else // jeżeli stworzone zostało dopasowanie
             {
-                foreach (Point pnt in matched) // usuń dopasowane elementy
+                ComboCounter += matched.Count;
+                ComboCounter += secondary_matched.Count;
+
+                List<TilePiece> Orb_Of_Alteration_Match = new List<TilePiece>();
+                List<TilePiece> Jewellers_Orb_Match = new List<TilePiece>();
+                List<TilePiece> Chromatic_Orb_Match = new List<TilePiece>();
+                List<TilePiece> Orb_Of_Alchemy_Match = new List<TilePiece>();
+                List<TilePiece> Orb_Of_Fusing_Match = new List<TilePiece>();
+                List<TilePiece> Regal_Orb_Match = new List<TilePiece>();
+                List<TilePiece> Orb_Of_Regret_Match = new List<TilePiece>();
+                List<TilePiece> Vaal_Orb_Match = new List<TilePiece>();
+                List<TilePiece> Chaos_Orb_Match = new List<TilePiece>();
+                List<TilePiece> Divine_Orb_Match = new List<TilePiece>();
+                List<TilePiece> Exalted_Orb_Match = new List<TilePiece>();
+                List<TilePiece> Mirror_Of_Kalandra_Match = new List<TilePiece>();
+
+                foreach (Point pnt in matched)                // usuń dopasowane elementy
                 {
                     Tile tile = GetTileAtPoint(pnt);
                     TilePiece tilepiece = tile.GetPiece();
+
+                    switch (tilepiece.currency_type)
+                    {
+                        case 1: //orbs of alteration
+                            {
+                                Orb_Of_Alteration_Match.Add(tilepiece);
+                                break;
+                            }
+                        case 2: //jewellers orb
+                            {
+                                Jewellers_Orb_Match.Add(tilepiece);
+                                break;
+                            }
+                        case 3: // chromatic orb
+                            {
+                                Chromatic_Orb_Match.Add(tilepiece);
+                                break;
+                            }
+                        case 4: // alchemy orb
+                            {
+                                Orb_Of_Alchemy_Match.Add(tilepiece);
+                                break;
+
+                            }
+                        case 5: // orb of fusing
+                            {
+                                Orb_Of_Fusing_Match.Add(tilepiece);
+                                break;
+                            }
+                        case 6: // regal orb
+                            {
+                                Regal_Orb_Match.Add(tilepiece);
+                                break;
+                            }
+                        case 7: // orb of regret
+                            {
+                                Orb_Of_Regret_Match.Add(tilepiece);
+                                break;
+                            }
+                        case 8: // vaal orb
+                            {
+                                Vaal_Orb_Match.Add(tilepiece);
+                                break;
+                            }
+                        case 9: // chaos orb
+                            {
+                                Chaos_Orb_Match.Add(tilepiece);
+                                break;
+                            }
+                        case 10: // divine orb
+                            {
+                                Divine_Orb_Match.Add(tilepiece);
+                                break;
+
+                            }
+                        case 11: // Exalted orb
+                            {
+                                Exalted_Orb_Match.Add(tilepiece);
+                                break;
+                            }
+                        case 12: // Mirror Of Kalandra
+                            {
+                                Mirror_Of_Kalandra_Match.Add(tilepiece);
+                                break;
+                            }
+
+                    }       // adding tilepiece to it's corresponding currency pool -> sorting removed currency
+                    
+                    secondary_matched.AddRange(CreateSecondaryMatchList(Orb_Of_Alteration_Match));
+                    secondary_matched.AddRange(CreateSecondaryMatchList(Jewellers_Orb_Match));
+                    secondary_matched.AddRange(CreateSecondaryMatchList(Chromatic_Orb_Match));
+                    secondary_matched.AddRange(CreateSecondaryMatchList(Orb_Of_Alchemy_Match));
+                    secondary_matched.AddRange(CreateSecondaryMatchList(Orb_Of_Fusing_Match));
+                    secondary_matched.AddRange(CreateSecondaryMatchList(Regal_Orb_Match));
+                    secondary_matched.AddRange(CreateSecondaryMatchList(Orb_Of_Regret_Match));
+                    secondary_matched.AddRange(CreateSecondaryMatchList(Vaal_Orb_Match));
+                    secondary_matched.AddRange(CreateSecondaryMatchList(Chaos_Orb_Match));
+                    secondary_matched.AddRange(CreateSecondaryMatchList(Divine_Orb_Match));
+                    secondary_matched.AddRange(CreateSecondaryMatchList(Exalted_Orb_Match));
+                    secondary_matched.AddRange(CreateSecondaryMatchList(Mirror_Of_Kalandra_Match));
+
                     if (tilepiece != null)
                     {
-                        tilepiece.gameObject.SetActive(false); // zamień elementy na nieaktywne
-                        dead.Add(tilepiece);                        
-                        TotalDestroyedOrbsCounter++;
-                        Score.text = TotalDestroyedOrbsCounter.ToString();
-
-
-                        //Debug.Log("Total destroyed orbs : "+TotalDestroyedOrbsCounter); // zlicz ile elementów zostało zniszczonych w danym ruchu
+                        tilepiece.gameObject.SetActive(false);  // zamień elementy na nieaktywne
+                        dead.Add(tilepiece);                    // dodaj do listy martwych elementów                
+                        TotalDestroyedOrbsCounter++;            // zwieksz wynik
+                        Score.text = TotalDestroyedOrbsCounter.ToString();  //zaktualizuj wynik na planszy
                     }
                     tile.SetPiece(null);
                 }
 
+                foreach (Point pnt_sec in secondary_matched)
+                {
+                    Tile tile = GetTileAtPoint(pnt_sec);
+                    TilePiece tilepiece = tile.GetPiece();
+
+                    if (tilepiece != null)
+                    {
+                        tilepiece.gameObject.SetActive(false);  // zamień elementy na nieaktywne
+                        dead.Add(tilepiece);                    // dodaj do listy martwych elementów                
+                        TotalDestroyedOrbsCounter++;            // zwieksz wynik
+                        Score.text = TotalDestroyedOrbsCounter.ToString();  //zaktualizuj wynik na planszy
+                    }
+                    tile.SetPiece(null);
+                }
+
+                ComboBreaker.text = ("+ " + ComboCounter.ToString());
+
                 ApplyGravityToBoard();
                 //wypełnij powstałe luki
             }
-                
+
             flipped.Remove(flip); //usuń element flip po zaktualizowaniu
             update.Remove(piece);
         }
     }
+    private bool CheckFor4InLine(List<TilePiece> Currency_Match, int direction) // 0 - vertical check , 1 - horizontal check , returns true if 4 in one line
+    {
+        if (direction == 0)
+        {
+            if (Currency_Match[0].index.x == Currency_Match[1].index.x &&
+                Currency_Match[1].index.x == Currency_Match[2].index.x &&
+                Currency_Match[2].index.x == Currency_Match[3].index.x) // check if they are in vertical line
+                return true;
+            else
+                return false;
+        }
 
+        else if (direction == 1)
+        {
+            if (Currency_Match[0].index.y == Currency_Match[1].index.y &&
+                Currency_Match[1].index.y == Currency_Match[2].index.y &&
+                Currency_Match[2].index.y == Currency_Match[3].index.y) // check if they are in horizontal line
+                return true;
+            else
+                return false;
+        }
+        else return false;
+    }
+
+    private bool CheckFor5InLine(List<TilePiece> Currency_Match, int direction) // 0 - vertical check , 1 - horizontal check , returns true if 5 in one line
+    {
+        if (direction == 0)
+        {
+            if (Currency_Match[0].index.x == Currency_Match[1].index.x &&
+                Currency_Match[1].index.x == Currency_Match[2].index.x &&
+                Currency_Match[2].index.x == Currency_Match[3].index.x &&
+                Currency_Match[3].index.x == Currency_Match[4].index.x) // check if they are in vertical line
+                return true;
+            else
+                return false;
+        }
+
+        else if (direction == 1)
+        {
+            if (Currency_Match[0].index.y == Currency_Match[1].index.y &&
+                Currency_Match[1].index.y == Currency_Match[2].index.y &&
+                Currency_Match[2].index.y == Currency_Match[3].index.y &&
+                Currency_Match[3].index.y == Currency_Match[4].index.y) // check if they are in horizontal line
+                return true;
+            else
+                return false;
+        }
+        else return false;
+    }
+
+    private bool CheckFor5OrMore(List<TilePiece> Currency_Match) // 0 - vertical check , 1 - horizontal check , returns true if 5 in one line
+    {
+        int counter = 1;
+        for (int i = 1; i < Currency_Match.Count; i++)
+        {
+            if (Currency_Match[i].currency_type == Currency_Match[i - 1].currency_type)
+                counter++;
+        }
+        if (counter >= 5)
+            return true;
+        else
+            return false;
+    }
+    private List<Point> CreateSecondaryMatchList(List<TilePiece> Currency_Match) // for example : takes Jewellers_Orb_Match and returns list of points to add to secondary match
+    {
+        List<Point> temp_secondary_match = new List<Point>();
+        
+        if (Currency_Match.Count > 3)
+        {
+            if (Currency_Match.Count == 4)
+            {
+                if (CheckFor4InLine(Currency_Match, 0)) // check if they are in vertical line
+                {
+                    for (int y = 0; y < board_size; y++)
+                    {
+                        int column = Currency_Match[0].index.x; // get column x to value
+                        Point column_elements = new Point(column, y);    // get point to add to matched
+                        temp_secondary_match.Add(column_elements);          // add points from column to secondary_matched list that will be removed later on
+                    } // for whole column of matching x
+                }
+
+                if (CheckFor4InLine(Currency_Match, 1)) //check if they are in horizontal line
+                {
+                    for (int x = 0; x < board_size; x++)
+                    {
+                        int row = Currency_Match[0].index.y;   // get column x to value
+                        Point row_elements = new Point(x, row);         // get point to add to matched
+                        temp_secondary_match.Add(row_elements);            // add points from column to secondary_matched list that will be removed later on
+                    } // for whole column of matching x
+                }
+            } // if more than 3, check for match of exactly 4
+            else // if more than 4 check if they are in one line
+            {
+                if (CheckFor5OrMore(Currency_Match))// check if there are 5 or more in match
+                       
+                    for (int x = 0; x < board_size; x++)
+                    {
+                        for (int y = 0; y < board_size; y++)
+                        {
+                            Point compared_tile_index = new Point(x, y);                            
+                            int compared_tile_currency_type = GetCurrencyTypeAtPoint(compared_tile_index);                            
+
+                            if (Currency_Match[0].currency_type == compared_tile_currency_type)
+                                temp_secondary_match.Add(compared_tile_index);                          
+                                
+                        }
+                    }
+                    
+            
+                
+            }
+        }
+
+        return temp_secondary_match;
+    }
     FlippedPieces GetFlipped(TilePiece t)
     {
         FlippedPieces tile = null;
