@@ -11,10 +11,37 @@ public class GameBoard : MonoBehaviour
     public Text Score;
     public Text ComboBreaker;
 
+
+
+    [Header("Jeweller PowerUp Handlers")]
+    public Button JewellerButton;
+    public Slider JewellerPowerUp;
+    public Text JewellerPowerUpsAmountText;
+    readonly int JewellerPowerUpRequirements = 40;
+    [HideInInspector]
+    int JewellerPowerUpProgress;
+    [HideInInspector]
+    int JewellerPowerUpsAmount;
+
+
+
+    [Header("Regret PowerUp Handlers")]
+    public Button RegretButton;
+    public Slider RegretPowerUp;
+    public Text RegretPowerUpsAmountText;
+    readonly int RegretPowerUpRequirements = 288;
+    [HideInInspector]
+    int RegretPowerUpProgress;
+    [HideInInspector]
+    int RegretPowerUpsAmount;
+
+
+
     [Header("Prefabs")]
     public GameObject Tile_Piece; //cos z instancjonowaniem
     
     static readonly int board_size = 12; //inicjalizacja wielkości planszy
+    int[] fills;
     Tile[,] Tile; //inicjalizacja matrycy elementów
     
     public static int amount_of_currency_types = 13; // deklaracja wartosci ilosci typow currency
@@ -22,15 +49,24 @@ public class GameBoard : MonoBehaviour
     List<TilePiece> update;
     List<FlippedPieces> flipped;
     List<TilePiece> dead;
+    
+    [HideInInspector]
     public int TotalDestroyedOrbsCounter;
+    [HideInInspector]
     public int ComboCounter;
 
     // Start is called before the first frame update
     void Start()
     {
+        fills = new int[board_size];
         update = new List<TilePiece>();
         flipped = new List<FlippedPieces>();
         dead = new List<TilePiece>();
+
+        JewellerPowerUpProgress = JewellerPowerUpRequirements;
+        RegretPowerUpProgress = RegretPowerUpRequirements;
+        JewellerButton.enabled = false;
+        RegretButton.enabled = false;
 
         InitializeBoard();
         VerifyBoardInitialization();
@@ -134,7 +170,7 @@ public class GameBoard : MonoBehaviour
                         //Debug.Log("Filling holes");
                         int newCurrencyType = RollCurrencyType();
                         TilePiece piece = null;
-                        Point spawnPoint = new Point(x, board_size);
+                        Point spawnPoint = new Point(x, (board_size + fills[x]));
 
                         if (dead.Count > 0)
                         {
@@ -159,9 +195,12 @@ public class GameBoard : MonoBehaviour
                         Tile hole = GetTileAtPoint(p);
                         hole.SetPiece(piece);
                         ResetPiece(piece);
+                        fills[x]++;
+
 
                         //fill the hole
                     }
+                    
                     break;
                 }
 
@@ -193,6 +232,9 @@ public class GameBoard : MonoBehaviour
             //Debug.Log(finishedUpdating[i]);
             FlippedPieces flip = GetFlipped(piece);                 //
             TilePiece flippedPiece = null;
+
+            int x = (int)piece.index.x;
+            fills[x] = Mathf.Clamp(fills[x] - 1, 0, board_size);
 
 
             List<Point> matched = IsConnected(piece.index, true);
@@ -241,27 +283,35 @@ public class GameBoard : MonoBehaviour
                         case 1: //orbs of alteration
                             {
                                 Orb_Of_Alteration_Match.Add(tilepiece);
+                                JewellerPowerUpProgress--; 
                                 break;
                             }
                         case 2: //jewellers orb
                             {
                                 Jewellers_Orb_Match.Add(tilepiece);
+                                JewellerPowerUpProgress -= 2;
+                                
                                 break;
                             }
                         case 3: // chromatic orb
                             {
                                 Chromatic_Orb_Match.Add(tilepiece);
+                                JewellerPowerUpProgress -= 6;
+                                
                                 break;
                             }
                         case 4: // alchemy orb
                             {
                                 Orb_Of_Alchemy_Match.Add(tilepiece);
+                                RegretPowerUpProgress--;
                                 break;
 
                             }
                         case 5: // orb of fusing
                             {
                                 Orb_Of_Fusing_Match.Add(tilepiece);
+                                JewellerPowerUpProgress -= 8;
+                                
                                 break;
                             }
                         case 6: // regal orb
@@ -272,6 +322,7 @@ public class GameBoard : MonoBehaviour
                         case 7: // orb of regret
                             {
                                 Orb_Of_Regret_Match.Add(tilepiece);
+                                RegretPowerUpProgress--;
                                 break;
                             }
                         case 8: // vaal orb
@@ -326,10 +377,71 @@ public class GameBoard : MonoBehaviour
                     tile.SetPiece(null);
                 }
 
+                
                 foreach (Point pnt_sec in secondary_matched)
                 {
                     Tile tile = GetTileAtPoint(pnt_sec);
                     TilePiece tilepiece = tile.GetPiece();
+
+                    switch (tile.currency_type)
+                    {
+                        case 1: //orbs of alteration
+                            {
+                                JewellerPowerUpProgress--;
+                                break;
+                            }
+                        case 2: //jewellers orb
+                            {
+                                JewellerPowerUpProgress -= 2;
+                                break;
+                            }
+                        case 3: // chromatic orb
+                            {
+                                JewellerPowerUpProgress -= 6;
+                                break;
+                            }
+                        case 4: // alchemy orb
+                            {
+                                RegretPowerUpProgress--;
+                                break;
+                            }
+                        case 5: // orb of fusing
+                            {
+                                JewellerPowerUpProgress -= 8;
+                                break;
+                            }
+                        case 6: // regal orb
+                            {
+                                break;
+                            }
+                        case 7: // orb of regret
+                            {
+                                RegretPowerUpProgress--;
+                                break;
+                            }
+                        case 8: // vaal orb
+                            {
+                                break;
+                            }
+                        case 9: // chaos orb
+                            {
+                                break;
+                            }
+                        case 10: // divine orb
+                            {
+                                break;
+
+                            }
+                        case 11: // Exalted orb
+                            {
+                                break;
+                            }
+                        case 12: // Mirror Of Kalandra
+                            {
+                                break;
+                            }
+
+                    }       // adding tilepiece to it's corresponding currency pool -> sorting removed currency
 
                     if (tilepiece != null)
                     {
@@ -341,10 +453,47 @@ public class GameBoard : MonoBehaviour
                     tile.SetPiece(null);
                 }
 
+                // Jewellers counters
+                
+                while (JewellerPowerUpProgress <= 0)
+                {
+                    int carry = JewellerPowerUpProgress * (-1);
+                    JewellerPowerUpProgress = JewellerPowerUpRequirements - carry;
+                    JewellerPowerUpsAmount++;
+                }
+
+                if (JewellerPowerUpsAmount != 0)
+                {
+                    JewellerButton.enabled = true;
+                    JewellerPowerUpsAmountText.text = (JewellerPowerUpsAmount.ToString()); 
+                }
+               
+                JewellerPowerUp.value = JewellerPowerUpProgress;
+
+
+
+                // Regret counters
+
+                while (RegretPowerUpProgress <= 0)
+                {
+                    int carry = RegretPowerUpProgress * (-1);
+                    RegretPowerUpProgress = RegretPowerUpRequirements - carry;
+                    RegretPowerUpsAmount++;
+                }
+
+                if (RegretPowerUpsAmount != 0)
+                {
+                    RegretButton.enabled = true;
+                    RegretPowerUpsAmountText.text = (RegretPowerUpsAmount.ToString());
+                }
+
+                RegretPowerUp.value = RegretPowerUpProgress;
+
+
                 ComboBreaker.text = ("+ " + ComboCounter.ToString());
 
                 ApplyGravityToBoard();
-                //wypełnij powstałe luki
+               
             }
 
             flipped.Remove(flip); //usuń element flip po zaktualizowaniu

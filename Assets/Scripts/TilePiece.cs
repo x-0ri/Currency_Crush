@@ -61,7 +61,7 @@ public class TilePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void MovePosition(Vector2 move)
     {
         //rect.anchoredPosition += Vector2.Lerp(rect.anchoredPosition, move, Time.deltaTime * 10f);
-        rect.anchoredPosition += move * Time.deltaTime * 10f;
+        rect.anchoredPosition += move * Time.deltaTime * 5f;
         //rect.anchoredPosition = move;
     }
     public void MovePositionTo(Vector2 moveto)
