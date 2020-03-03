@@ -17,6 +17,7 @@ public class GameBoard : MonoBehaviour
     public Button JewellerButton;
     public Slider JewellerPowerUp;
     public Text JewellerPowerUpsAmountText;
+    public Image JewellerCooldownImage;
     readonly int JewellerPowerUpRequirements = 200;
     [HideInInspector]
     int JewellerPowerUpProgress;
@@ -25,6 +26,8 @@ public class GameBoard : MonoBehaviour
     [HideInInspector]
     static public bool UsingJeweller = false;
     public static Point JewellerPowerUpPointIndex;
+    [HideInInspector] 
+    public float JewellerCooldown;
 
 
 
@@ -32,12 +35,16 @@ public class GameBoard : MonoBehaviour
     public Button RegretButton;
     public Slider RegretPowerUp;
     public Text RegretPowerUpsAmountText;
+    public Image RegretCooldownImage;
     readonly int RegretPowerUpRequirements = 720;
     [HideInInspector]
     int RegretPowerUpProgress;
     [HideInInspector]
     int RegretPowerUpsAmount;
     List<Tile> RegretIndexList;
+    [HideInInspector] 
+    public float RegretCooldown;
+
 
 
 
@@ -45,6 +52,7 @@ public class GameBoard : MonoBehaviour
     public Button VaalButton;
     public Slider VaalPowerUp;
     public Text VaalPowerUpsAmountText;
+    public Image VaalCooldownImage;
     readonly int VaalPowerUpRequirements = 100;
     [HideInInspector]
     int VaalPowerUpProgress;
@@ -52,12 +60,16 @@ public class GameBoard : MonoBehaviour
     int VaalPowerUpsAmount;
     public static List<Point> VaalPowerUpIndexes;
     int VaalPowerUpEvent = 666;
+    [HideInInspector]
+    public float VaalCooldown;
+
 
 
     [Header("Exalted PowerUp Handlers")]
     public Button ExaltedButton;
     public Slider ExaltedPowerUp;
     public Text ExaltedPowerUpsAmountText;
+    public Image ExaltedCooldownImage;
     readonly int ExaltedPowerUpRequirements = 1200;
     [HideInInspector]
     public int ExaltedPowerUpProgress;
@@ -65,7 +77,11 @@ public class GameBoard : MonoBehaviour
     int ExaltedPowerUpsAmount;
     public static List<Point> ExaltedPowerUpIndexes;
     int ExaltedPowerUpEvent = 0;
+    [HideInInspector]
+    public float ExaltedCooldown;
 
+
+    static public bool usedMouse = false;
 
 
     [Header("Prefabs")]
@@ -114,10 +130,22 @@ public class GameBoard : MonoBehaviour
 
         RegretIndexList = new List<Tile>();
 
+        JewellerCooldown = 1;
+        JewellerCooldownImage.fillAmount = JewellerCooldown;
+
+        RegretCooldown = 1;
+        RegretCooldownImage.fillAmount = RegretCooldown;
+
+        VaalCooldown = 1;
+        VaalCooldownImage.fillAmount = VaalCooldown;
+
+        ExaltedCooldown = 1;
+        ExaltedCooldownImage.fillAmount = ExaltedCooldown;
 
         InitializeBoard();
         VerifyBoardInitialization();
         InstantiateBoard();
+
     }
     void InitializeBoard() //inicjalizowanie planszy
     {
@@ -256,6 +284,7 @@ public class GameBoard : MonoBehaviour
             }
         }
     }
+
     public Vector2 GetPositionFromPoint(Point p)
     {
         return new Vector2(-182 + (33 * p.x), -181 + (33 * p.y)); //nie wiem ale dziala
@@ -358,6 +387,7 @@ public class GameBoard : MonoBehaviour
             {
                 flippedPiece = flip.GetOtherPiece(piece);
                 AddPoints(ref matched, IsConnected(flippedPiece.index, true));
+                
             }
 
             if (matched.Count == 0) // jeżeli nie stworzone zostało dopasowanie
@@ -368,6 +398,42 @@ public class GameBoard : MonoBehaviour
 
             else // jeżeli stworzone zostało dopasowanie
             {
+                if (usedMouse)
+                {
+                    if (JewellerCooldown > 0)
+                    {
+                        JewellerCooldown -= 0.25f;
+                        JewellerCooldownImage.fillAmount = JewellerCooldown;
+
+                    }
+
+                    if (RegretCooldown > 0)
+                    {
+                        RegretCooldown -= 0.01f;
+                        RegretCooldownImage.fillAmount = RegretCooldown;
+
+                    }
+
+                    if (VaalCooldown > 0)
+                    {
+                        VaalCooldown -= 0.1f;
+                        VaalCooldownImage.fillAmount = VaalCooldown;
+                    }
+
+                    if (ExaltedCooldown > 0)
+                    {
+                        ExaltedCooldown -= 0.05f;
+                        ExaltedCooldownImage.fillAmount = ExaltedCooldown;
+
+                    }
+                    Debug.Log(JewellerCooldown);
+                    Debug.Log(RegretCooldown);
+                    Debug.Log(VaalCooldown);                    
+                    Debug.Log(ExaltedCooldown);
+
+                    GameBoard.usedMouse = false;
+                }
+
                 ComboCounter += matched.Count;
                 ComboCounter += secondary_matched.Count;
 
@@ -796,7 +862,7 @@ public class GameBoard : MonoBehaviour
 
     public void PowerUp_Regret()
     {
-        if (RegretPowerUpsAmount >= 1)
+        if (RegretPowerUpsAmount >= 1 && RegretCooldown <= 0)
         {
             DestroyBoard();
             InitializeBoard();
@@ -804,22 +870,30 @@ public class GameBoard : MonoBehaviour
             InstantiateBoard();
 
             RegretPowerUpsAmount--;
+            RegretCooldown = 1;
+            RegretCooldownImage.fillAmount = RegretCooldown;
+
             if (RegretPowerUpsAmount == 0)
                 RegretPowerUpsAmountText.text = ("");
             else
                 RegretPowerUpsAmountText.text = RegretPowerUpsAmount.ToString();
 
         }
+
         RegretButton.enabled = false;
         RegretButton.enabled = true;
     }
 
     public void PowerUp_Jeweller()
     {
-        if (JewellerPowerUpsAmount >= 1)
+        if (JewellerPowerUpsAmount >= 1 && JewellerCooldown <= 0)
         {
             UsingJeweller = true;
             JewellerPowerUpsAmount--;
+
+            JewellerCooldown = 1;
+            JewellerCooldownImage.fillAmount = JewellerCooldown;
+
             if (JewellerPowerUpsAmount == 0)
                 JewellerPowerUpsAmountText.text = ("");
             else
@@ -831,8 +905,12 @@ public class GameBoard : MonoBehaviour
 
     public void PowerUp_VaalOrb()
     {
-        if (VaalPowerUpsAmount >= 1)
+        if (VaalPowerUpsAmount >= 1 && VaalCooldown <= 0)
         {
+            float Previousamount = VaalCooldown;
+            VaalCooldown = 1;
+            VaalCooldownImage.fillAmount = Mathf.Lerp(Previousamount,VaalCooldown,Time.deltaTime);            
+
             ComboCounter = 0;
             ComboBreaker.text = (ComboCounter.ToString());
 
@@ -963,11 +1041,14 @@ public class GameBoard : MonoBehaviour
 
     public void PowerUp_Exalted()
     {
-        if (ExaltedPowerUpsAmount >= 1)
+        if (ExaltedPowerUpsAmount >= 1 && ExaltedCooldown  <= 0)
         {
             ComboCounter = 0;
             ComboBreaker.text = (ComboCounter.ToString());
             ExaltedPowerUpsAmount--;
+            ExaltedCooldown = 1;
+            ExaltedCooldownImage.fillAmount = ExaltedCooldown;
+
 
             Debug.Log("Executing event :exalted orb");
             ExaltedPowerUpEvent = 1;
@@ -1013,7 +1094,6 @@ public class GameBoard : MonoBehaviour
         ExaltedButton.enabled = true;
     }         
  
-
     void DestroyBoard() //zniszczenie planszy
     {
         for (int x = 0; x < board_size; x++) //podwojny for - obsluga matrycy 2D
@@ -1073,6 +1153,7 @@ public class GameBoard : MonoBehaviour
 
 
     }
+
     FlippedPieces GetFlipped(TilePiece t)
     {
         FlippedPieces tile = null;
@@ -1091,6 +1172,7 @@ public class GameBoard : MonoBehaviour
     {
         tile.ResetPosition();
         update.Add(tile);
+        
     }
 
     public void FlipPieces(Point origin, Point destination, bool main)
@@ -1113,6 +1195,8 @@ public class GameBoard : MonoBehaviour
 
             update.Add(pieceOne);
             update.Add(pieceTwo);
+
+            
         }
         else        
             ResetPiece(pieceOne);
@@ -1128,6 +1212,7 @@ public class GameBoard : MonoBehaviour
         if (p.x < 0 || p.x >= board_size || p.y < 0 || p.y >= board_size) return -1;
         return Tile[p.x, p.y].currency_type;
     }
+
     void SetCurrencyTypeAtPoint(Point p, int v)
     {
         Tile[p.x, p.y].currency_type = v;

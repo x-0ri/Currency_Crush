@@ -70,7 +70,7 @@ public class TilePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerDown(PointerEventData eventData) //MouseButtonDown handler
     {
         if (updating) return;
-
+        
         if (GameBoard.UsingJeweller) // check if jewller's powerup is in use
         {
             if (this.currency_type != 13)
@@ -83,12 +83,8 @@ public class TilePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     public void OnPointerUp(PointerEventData eventData) //MouseButtonUp handler
     {
+        GameBoard.usedMouse = true;
         MovePieces.instance.DropPiece(); //wywołaj funkcje droppiece
         //Debug.Log("Drop " + transform.name);
     }
-    public void DestroyTile()
-    {
-        Destroy(this);
-    }
- 
 }
