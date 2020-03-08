@@ -122,7 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 39002060}
   - component: {fileID: 39002061}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: JewellerPowerUpSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -210,7 +210,7 @@ GameObject:
   - component: {fileID: 52376728}
   - component: {fileID: 52376727}
   - component: {fileID: 52376726}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: GameBoard_Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225,7 +225,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 52376724}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -2}
   m_LocalScale: {x: 1.6, y: 1.6, z: 1.6}
   m_Children: []
   m_Father: {fileID: 1609726076}
@@ -307,7 +307,7 @@ GameObject:
   - component: {fileID: 56538826}
   - component: {fileID: 56538828}
   - component: {fileID: 56538827}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ProgressBarFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -330,7 +330,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 120, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &56538827
@@ -379,7 +379,7 @@ GameObject:
   - component: {fileID: 93508870}
   - component: {fileID: 93508872}
   - component: {fileID: 93508871}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ExaltedAmountText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,7 +402,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.7, y: 5.9}
+  m_AnchoredPosition: {x: -1.7000008, y: 5.8999996}
   m_SizeDelta: {x: 109.6, y: 126.96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &93508871
@@ -454,7 +454,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 205855466}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: VaalPowerUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -495,7 +495,7 @@ GameObject:
   - component: {fileID: 209808923}
   - component: {fileID: 209808925}
   - component: {fileID: 209808924}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -565,7 +565,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 219862140}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -602,7 +602,7 @@ GameObject:
   m_Component:
   - component: {fileID: 318089889}
   - component: {fileID: 318089890}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ExaltedPowerUpSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -689,7 +689,7 @@ GameObject:
   - component: {fileID: 345829488}
   - component: {fileID: 345829490}
   - component: {fileID: 345829489}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -889,7 +889,7 @@ GameObject:
   - component: {fileID: 424801183}
   - component: {fileID: 424801182}
   - component: {fileID: 424801181}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ExaltedButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1013,7 +1013,7 @@ GameObject:
   - component: {fileID: 488976035}
   - component: {fileID: 488976037}
   - component: {fileID: 488976036}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1088,7 +1088,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 493194707}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ExaltedPowerUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1129,7 +1129,7 @@ GameObject:
   - component: {fileID: 533319988}
   - component: {fileID: 533319990}
   - component: {fileID: 533319989}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: RegretPowerUpBackGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1328,7 +1328,7 @@ GameObject:
   - component: {fileID: 576119348}
   - component: {fileID: 576119350}
   - component: {fileID: 576119349}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: VaalAmountText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1351,7 +1351,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.7, y: 5.9}
+  m_AnchoredPosition: {x: -1.7000008, y: 5.8999996}
   m_SizeDelta: {x: 109.6, y: 126.96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &576119349
@@ -1430,7 +1430,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0, g: 0.40378928, b: 1, a: 0}
+  m_BackGroundColor: {r: 0.23113209, g: 0.54169446, b: 1, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
@@ -1442,12 +1442,12 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: -1
-  far clip plane: 1000
+  near clip plane: 0
+  far clip plane: 100
   field of view: 32.067482
   orthographic: 1
   orthographic size: 60
-  m_Depth: 0
+  m_Depth: 6
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1470,8 +1470,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 659715776}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -325}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -25}
+  m_LocalScale: {x: 12, y: 12, z: 12}
   m_Children:
   - {fileID: 544228653}
   - {fileID: 1283860388}
@@ -1488,7 +1488,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 687243431}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1527,7 +1527,7 @@ GameObject:
   - component: {fileID: 743024104}
   - component: {fileID: 743024103}
   - component: {fileID: 743024105}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Game_Background_Space
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1567,7 +1567,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1613,7 +1613,7 @@ GameObject:
   - component: {fileID: 817625522}
   - component: {fileID: 817625524}
   - component: {fileID: 817625523}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: RegretAmountText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1636,7 +1636,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.7, y: 5.9}
+  m_AnchoredPosition: {x: -1.7000008, y: 5.8999996}
   m_SizeDelta: {x: 109.6, y: 126.96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &817625523
@@ -1690,7 +1690,7 @@ GameObject:
   - component: {fileID: 933564535}
   - component: {fileID: 933564537}
   - component: {fileID: 933564536}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ComboCounter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1705,7 +1705,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 933564534}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -3}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 1609726076}
@@ -1833,7 +1833,7 @@ GameObject:
   - component: {fileID: 1252711190}
   - component: {fileID: 1252711192}
   - component: {fileID: 1252711191}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ExaltedPowerUpBackGround (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1905,7 +1905,7 @@ GameObject:
   - component: {fileID: 1258343310}
   - component: {fileID: 1258343312}
   - component: {fileID: 1258343311}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ProgressBarFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1928,7 +1928,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 120, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1258343311
@@ -1977,7 +1977,7 @@ GameObject:
   - component: {fileID: 1269043208}
   - component: {fileID: 1269043210}
   - component: {fileID: 1269043209}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: JewellerAmountText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2000,7 +2000,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.7, y: 5.9}
+  m_AnchoredPosition: {x: -1.7000008, y: 5.8999996}
   m_SizeDelta: {x: 109.6, y: 126.96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1269043209
@@ -2055,7 +2055,7 @@ GameObject:
   - component: {fileID: 1281019299}
   - component: {fileID: 1281019298}
   - component: {fileID: 1281019297}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ButtonBackToSelect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2070,7 +2070,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1281019295}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 488976035}
@@ -2315,7 +2315,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1310319982}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2342,6 +2342,105 @@ RectTransform:
   m_AnchoredPosition: {x: -0.00025558472, y: 0}
   m_SizeDelta: {x: -0.00049591, y: 7.5}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1342546786
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1342546787}
+  - component: {fileID: 1342546789}
+  - component: {fileID: 1342546788}
+  m_Layer: 0
+  m_Name: AbyssalBoom
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1342546787
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342546786}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 68, y: 102, z: -5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1609726076}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1342546788
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342546786}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ebbb18917a05fa946ae13514137a84e4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!212 &1342546789
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342546786}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 64, y: 64}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 0
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &1353052655
 GameObject:
   m_ObjectHideFlags: 0
@@ -2353,7 +2452,7 @@ GameObject:
   - component: {fileID: 1353052656}
   - component: {fileID: 1353052658}
   - component: {fileID: 1353052657}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2425,7 +2524,7 @@ GameObject:
   - component: {fileID: 1356648092}
   - component: {fileID: 1356648094}
   - component: {fileID: 1356648093}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2497,7 +2596,7 @@ GameObject:
   - component: {fileID: 1364366976}
   - component: {fileID: 1364366978}
   - component: {fileID: 1364366977}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: VaalPowerUpBackGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2567,7 +2666,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1368870324}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: RegretPowerUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2607,7 +2706,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1406648244}
   - component: {fileID: 1406648245}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: RegretPowerUpSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2694,7 +2793,7 @@ GameObject:
   - component: {fileID: 1428160728}
   - component: {fileID: 1428160730}
   - component: {fileID: 1428160729}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2766,7 +2865,7 @@ GameObject:
   - component: {fileID: 1440428543}
   - component: {fileID: 1440428545}
   - component: {fileID: 1440428544}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Game_Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2781,7 +2880,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1440428542}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1609726076}
@@ -2839,7 +2938,7 @@ GameObject:
   - component: {fileID: 1449497093}
   - component: {fileID: 1449497092}
   - component: {fileID: 1449497091}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: RegretButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2962,7 +3061,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1485720907}
   - component: {fileID: 1485720908}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: VaalPowerUpSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3049,7 +3148,7 @@ GameObject:
   - component: {fileID: 1514928314}
   - component: {fileID: 1514928316}
   - component: {fileID: 1514928315}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ExaltedPowerUpBackGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3121,7 +3220,7 @@ GameObject:
   - component: {fileID: 1529304923}
   - component: {fileID: 1529304925}
   - component: {fileID: 1529304924}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ScoreCounter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3136,7 +3235,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1529304922}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -3}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 1609726076}
@@ -3200,7 +3299,7 @@ GameObject:
   - component: {fileID: 1548374433}
   - component: {fileID: 1548374435}
   - component: {fileID: 1548374434}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: JewellerPowerUpBackground (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3270,7 +3369,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1561369430}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3311,7 +3410,7 @@ GameObject:
   - component: {fileID: 1609726073}
   - component: {fileID: 1609726078}
   - component: {fileID: 1609726077}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Game_UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3366,8 +3465,8 @@ Canvas:
   m_GameObject: {fileID: 1609726072}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 2
+  m_Camera: {fileID: 659715778}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -3387,7 +3486,7 @@ RectTransform:
   m_GameObject: {fileID: 1609726072}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.1668052, y: 0.1668052, z: 0.1668052}
   m_Children:
   - {fileID: 743024102}
   - {fileID: 1440428543}
@@ -3396,14 +3495,15 @@ RectTransform:
   - {fileID: 1529304923}
   - {fileID: 933564535}
   - {fileID: 1656910763}
+  - {fileID: 1342546787}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_SizeDelta: {x: 1280, y: 719.4021}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1609726077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3461,6 +3561,7 @@ MonoBehaviour:
   ComboCounter: 0
   Herald_Shatter: {fileID: 1283860389}
   Abyssal_Explosion: {fileID: 350104788}
+  big_oomph: 0
 --- !u!114 &1609726078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3482,7 +3583,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1611095155}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: JewellerPowerUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3536,7 +3637,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1656910762}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -238.36418, y: 12.497953, z: 0.59346974}
+  m_LocalPosition: {x: -238.36418, y: 12.497953, z: -3}
   m_LocalScale: {x: 1.5782984, y: 1.5782984, z: 1.5782984}
   m_Children:
   - {fileID: 1611095155}
@@ -3558,7 +3659,7 @@ GameObject:
   - component: {fileID: 1682569153}
   - component: {fileID: 1682569152}
   - component: {fileID: 1682569151}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: VaalButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3682,7 +3783,7 @@ GameObject:
   - component: {fileID: 1725143896}
   - component: {fileID: 1725143898}
   - component: {fileID: 1725143897}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3755,7 +3856,7 @@ GameObject:
   - component: {fileID: 1751246747}
   - component: {fileID: 1751246746}
   - component: {fileID: 1751246745}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: JewellerButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3879,7 +3980,7 @@ GameObject:
   - component: {fileID: 1764755932}
   - component: {fileID: 1764755934}
   - component: {fileID: 1764755933}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ProgressBarFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3902,7 +4003,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 120, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1764755933
@@ -4008,7 +4109,7 @@ GameObject:
   - component: {fileID: 1771134425}
   - component: {fileID: 1771134427}
   - component: {fileID: 1771134426}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: RegretPowerUpBackGround (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4080,7 +4181,7 @@ GameObject:
   - component: {fileID: 1843666327}
   - component: {fileID: 1843666329}
   - component: {fileID: 1843666328}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4152,7 +4253,7 @@ GameObject:
   - component: {fileID: 1873168874}
   - component: {fileID: 1873168876}
   - component: {fileID: 1873168875}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4224,7 +4325,7 @@ GameObject:
   - component: {fileID: 1922347086}
   - component: {fileID: 1922347088}
   - component: {fileID: 1922347087}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: JewellerPowerUpBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4296,7 +4397,7 @@ GameObject:
   - component: {fileID: 2076860068}
   - component: {fileID: 2076860070}
   - component: {fileID: 2076860069}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ProgressBarFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4319,7 +4420,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 120, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2076860069
@@ -4368,7 +4469,7 @@ GameObject:
   - component: {fileID: 2135094630}
   - component: {fileID: 2135094632}
   - component: {fileID: 2135094631}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: VaalPowerUpBackGround (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -16,7 +16,7 @@ TagManager:
   - Background
   - ButtonFunctional
   - ButtonFrames
-  - 
+  - Booms
   - 
   - 
   - 
@@ -46,4 +46,7 @@ TagManager:
     locked: 0
   - name: GameObjects
     uniqueID: 597172501
+    locked: 0
+  - name: BOom
+    uniqueID: 1574005647
     locked: 0

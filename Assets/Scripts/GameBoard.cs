@@ -114,8 +114,6 @@ public class GameBoard : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine("NextRemoveDelay");
-
         fills = new int[board_size];
         update = new List<TilePiece>();
         flipped = new List<FlippedPieces>();
@@ -225,6 +223,7 @@ public class GameBoard : MonoBehaviour
 
     public void ApplyGravityToBoard()
     {
+        
         for (int x = 0; x < board_size; x++) // idż od x = 0 do x = 11
         {
             for (int y = 0; y < board_size; y++) // idź od y = 0 do y = 11
@@ -259,7 +258,7 @@ public class GameBoard : MonoBehaviour
                         //Debug.Log("Filling holes");
                         int newCurrencyType = RollCurrencyType();
                         TilePiece piece;// = null;
-                        Point spawnPoint = new Point(x, (ny + fills[x]));
+                        Point spawnPoint = new Point(x, ny + fills[x]);
 
                         if (dead.Count > 0)
                         {
@@ -276,6 +275,7 @@ public class GameBoard : MonoBehaviour
                             TilePiece t = obj.GetComponent<TilePiece>();
                             piece = t;
                         }
+                        
 
                         piece.Initialize(newCurrencyType, p, Orbs[newCurrencyType]);
                         piece.rect.anchoredPosition = GetPositionFromPoint(spawnPoint);
@@ -284,9 +284,7 @@ public class GameBoard : MonoBehaviour
                         Tile hole = GetTileAtPoint(p);
                         hole.SetPiece(piece);
                         ResetPiece(piece);
-                        fills[x]++;
-                        
-
+                        fills[x]++;             
 
                         //fill the hole
                     }
@@ -327,6 +325,7 @@ public class GameBoard : MonoBehaviour
 
         if (ExaltedPowerUpEvent == 1)
         {
+            big_oomph = true;
             foreach (Point p in ExaltedPowerUpIndexes)
             {
                 Tile ExaltedPowerUpUsedTile = GetTileAtPoint(p);
@@ -361,7 +360,7 @@ public class GameBoard : MonoBehaviour
 
 
             int x = (int)piece.index.x;
-            fills[x] = Mathf.Clamp(fills[x] - 1, 0, board_size);
+            fills[x] = Mathf.Clamp(fills[x] -1 , 0, board_size);
 
 
             List<Point> matched = IsConnected(piece.index, true);
@@ -574,10 +573,7 @@ public class GameBoard : MonoBehaviour
                         dead.Add(tilepiece);                    // dodaj do listy martwych elementów                
                         TotalDestroyedOrbsCounter++;            // zwieksz wynik
                         Score.text = TotalDestroyedOrbsCounter.ToString();  //zaktualizuj wynik na planszy
-                        if (big_oomph)
-                            Play_Abyssal_Explosion();
-                        else
-                            Play_Herald_Shatter();
+                        Play_Herald_Shatter();
                     }
                     tile.SetPiece(null);
                 }
@@ -655,8 +651,8 @@ public class GameBoard : MonoBehaviour
                         dead.Add(tilepiece);                    // dodaj do listy martwych elementów                
                         TotalDestroyedOrbsCounter++;            // zwieksz wynik
                         Score.text = TotalDestroyedOrbsCounter.ToString();  //zaktualizuj wynik na planszy
-                        if (ComboCounter > 15)
-                            Play_Abyssal_Explosion();
+                        if (big_oomph)
+                                Play_Abyssal_Explosion();
                     }
                     tile.SetPiece(null);
 
@@ -766,7 +762,6 @@ public class GameBoard : MonoBehaviour
         VaalPowerUpEvent = 666;
         ExaltedPowerUpEvent = 0;
         big_oomph = false;
-       
     }
     private bool CheckFor4InLine(List<TilePiece> Currency_Match, int direction) // 0 - vertical check , 1 - horizontal check , returns true if 4 in one line
     {
@@ -791,7 +786,6 @@ public class GameBoard : MonoBehaviour
         }
         else return false;
     }
-
     private bool CheckFor5InLine(List<TilePiece> Currency_Match, int direction) // 0 - vertical check , 1 - horizontal check , returns true if 5 in one line
     {
         if (direction == 0)
@@ -817,24 +811,6 @@ public class GameBoard : MonoBehaviour
         }
         else return false;
     }
-
-    private bool CheckFor5OrMore(List<TilePiece> Currency_Match) // 0 - vertical check , 1 - horizontal check , returns true if 5 in one line
-    {
-        int counter = 1;
-        for (int i = 1; i < Currency_Match.Count; i++)
-        {
-            if (Currency_Match[i].currency_type == Currency_Match[i - 1].currency_type)
-                counter++;
-        }
-        if (counter >= 5)
-        {
-            big_oomph = true;
-            return true;
-        }
-        else
-            return false;
-    }
-
     private List<Point> CreateSecondaryMatchList(List<TilePiece> Currency_Match) // for example : takes Jewellers_Orb_Match and returns list of points to add to secondary match
     {
         List<Point> temp_secondary_match = new List<Point>();
@@ -865,8 +841,9 @@ public class GameBoard : MonoBehaviour
             } // if more than 3, check for match of exactly 4
             else // if more than 4 check if they are in one line
             {
-                if (CheckFor5OrMore(Currency_Match))// check if there are 5 or more in match
-
+                if (CheckFor5InLine(Currency_Match, 0)) // check if there are 5 or more in match
+                {
+                    big_oomph = true;
                     for (int x = 0; x < board_size; x++)
                     {
                         for (int y = 0; y < board_size; y++)
@@ -879,7 +856,24 @@ public class GameBoard : MonoBehaviour
 
                         }
                     }
+                }
 
+                if (CheckFor5InLine(Currency_Match, 1)) // check if there are 5 or more in match
+                {
+                    big_oomph = true; 
+                    for (int x = 0; x < board_size; x++)
+                    {
+                        for (int y = 0; y < board_size; y++)
+                        {
+                            Point compared_tile_index = new Point(x, y);
+                            int compared_tile_currency_type = GetCurrencyTypeAtPoint(compared_tile_index);
+
+                         if (Currency_Match[0].currency_type == compared_tile_currency_type)
+                        temp_secondary_match.Add(compared_tile_index);
+
+                        }
+                    }
+                }
             }
         }
 
@@ -1336,13 +1330,13 @@ public class GameBoard : MonoBehaviour
 
     public void Play_Herald_Shatter()
     {
-        Herald_Shatter.PlayOneShot(Herald_Shatter.clip,0.25f); //stacking sound, sometimes goes LOUD AF
+        Herald_Shatter.PlayOneShot(Herald_Shatter.clip,0.18f); //stacking sound, sometimes goes LOUD AF
         //Herald_Shatter.Play(); non stacking sounds
     }
 
     public void Play_Abyssal_Explosion()
     {
-        Abyssal_Explosion.PlayOneShot(Abyssal_Explosion.clip,0.25f);
+        Abyssal_Explosion.PlayOneShot(Abyssal_Explosion.clip,0.13f);
     }
 
     public bool CheckIfBoardIsStatic()

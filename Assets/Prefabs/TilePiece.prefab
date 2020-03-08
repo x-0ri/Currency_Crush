@@ -54,8 +54,10 @@ MonoBehaviour:
   index:
     x: 0
     y: 0
+  abyssalboomanim: {fileID: 0}
   pos: {x: 0, y: 0}
   rect: {fileID: 0}
+  updating: 0
 --- !u!222 &2797234931318261833
 CanvasRenderer:
   m_ObjectHideFlags: 0
