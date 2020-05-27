@@ -1,27 +1,27 @@
 fileFormatVersion: 2
-guid: 710da70be378f9e47a9142b4b40e444e
+guid: 9e1f5b897841d5b45a9671732d10444f
 TextureImporter:
   fileIDToRecycleName:
-    21300000: abyssalcrysprites_0
-    21300002: abyssalcrysprites_1
-    21300004: abyssalcrysprites_2
-    21300006: abyssalcrysprites_3
-    21300008: abyssalcrysprites_4
-    21300010: abyssalcrysprites_5
-    21300012: abyssalcrysprites_6
-    21300014: abyssalcrysprites_7
-    21300016: abyssalcrysprites_8
-    21300018: abyssalcrysprites_9
-    21300020: abyssalcrysprites_10
-    21300022: abyssalcrysprites_11
-    21300024: abyssalcrysprites_12
-    21300026: abyssalcrysprites_13
-    21300028: abyssalcrysprites_14
-    21300030: abyssalcrysprites_15
-    21300032: abyssalcrysprites_16
-    21300034: abyssalcrysprites_17
-    21300036: abyssalcrysprites_18
-    21300038: abyssalcrysprites_19
+    21300000: heraldoficesprites_0
+    21300002: heraldoficesprites_1
+    21300004: heraldoficesprites_2
+    21300006: heraldoficesprites_3
+    21300008: heraldoficesprites_4
+    21300010: heraldoficesprites_5
+    21300012: heraldoficesprites_6
+    21300014: heraldoficesprites_7
+    21300016: heraldoficesprites_8
+    21300018: heraldoficesprites_9
+    21300020: heraldoficesprites_10
+    21300022: heraldoficesprites_11
+    21300024: heraldoficesprites_12
+    21300026: heraldoficesprites_13
+    21300028: heraldoficesprites_14
+    21300030: heraldoficesprites_15
+    21300032: heraldoficesprites_16
+    21300034: heraldoficesprites_17
+    21300036: heraldoficesprites_18
+    21300038: heraldoficesprites_19
   externalObjects: {}
   serializedVersion: 9
   mipmaps:
@@ -115,7 +115,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: abyssalcrysprites_0
+      name: heraldoficesprites_0
       rect:
         serializedVersion: 2
         x: 0
@@ -123,19 +123,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 69c1dd9f480564547bac7ddcf38a4396
+      spriteID: 35090aefd3f51ba41ac91c168afa2314
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_1
+      name: heraldoficesprites_1
       rect:
         serializedVersion: 2
         x: 64
@@ -143,19 +143,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5d9d9bec828824346988f8d73829dea5
+      spriteID: 2ab65ff7b6656ba4f8a60a2480331fa3
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_2
+      name: heraldoficesprites_2
       rect:
         serializedVersion: 2
         x: 128
@@ -163,19 +163,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d3943894b9cc23140b191e8f98645c9f
+      spriteID: e74fc4561db6c34499c27eb8aea3359d
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_3
+      name: heraldoficesprites_3
       rect:
         serializedVersion: 2
         x: 192
@@ -183,19 +183,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d2b28476330559c4ea45d81f136279af
+      spriteID: e24bb97e7bbfcda45aa2f20b8cf594b6
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_4
+      name: heraldoficesprites_4
       rect:
         serializedVersion: 2
         x: 256
@@ -203,19 +203,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d8d886e70e4f7444180c076a02a4044d
+      spriteID: 8a3eedcb7ba42e74d8b72a1f061b52d9
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_5
+      name: heraldoficesprites_5
       rect:
         serializedVersion: 2
         x: 320
@@ -223,19 +223,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 599259ed0f7622f47b2ec24ba9c8d142
+      spriteID: 794e33be2210da144a719ee98e1eb598
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_6
+      name: heraldoficesprites_6
       rect:
         serializedVersion: 2
         x: 384
@@ -243,19 +243,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 726d3ec15ea22ae4b99bde404dfeab35
+      spriteID: 0f7fb84daf82ef2479980c45d7b3432c
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_7
+      name: heraldoficesprites_7
       rect:
         serializedVersion: 2
         x: 448
@@ -263,19 +263,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9842f30acef5e0a4685fffeabd5764cf
+      spriteID: d19edae0f26feac4abc751698d6cb9be
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_8
+      name: heraldoficesprites_8
       rect:
         serializedVersion: 2
         x: 512
@@ -283,19 +283,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 46d757f9a7b2b5046857e1267962b306
+      spriteID: b05ce24305888a243a8c1dde52a89a8d
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_9
+      name: heraldoficesprites_9
       rect:
         serializedVersion: 2
         x: 576
@@ -303,19 +303,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3a5d7b099ddb12e4d9edbf2c502040e7
+      spriteID: d7cc8d0c4ff5be949bc550c096325cac
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_10
+      name: heraldoficesprites_10
       rect:
         serializedVersion: 2
         x: 640
@@ -323,19 +323,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 09da372079ccf3f4083070e53a5d5ab4
+      spriteID: 64e537cd4b95fd045ad4ec26b90c83cf
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_11
+      name: heraldoficesprites_11
       rect:
         serializedVersion: 2
         x: 704
@@ -343,19 +343,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 87ca25b468b81db43815cb034e92dbf7
+      spriteID: f6ff44a206e11464cbc77f7011130706
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_12
+      name: heraldoficesprites_12
       rect:
         serializedVersion: 2
         x: 768
@@ -363,19 +363,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ba01e41ca697ac84e828b15be53b461a
+      spriteID: cc2653d4ab82e8c48a994be8e646bb61
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_13
+      name: heraldoficesprites_13
       rect:
         serializedVersion: 2
         x: 832
@@ -383,19 +383,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6de485f1ed50a9a498df58c3b2787590
+      spriteID: 7c9b0eabd82d67146901bf91bd120873
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_14
+      name: heraldoficesprites_14
       rect:
         serializedVersion: 2
         x: 896
@@ -403,19 +403,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 64cc37aa61059004b80dd9a158fafeba
+      spriteID: 75e636554ee4ff44a80ebfce9cbbb507
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_15
+      name: heraldoficesprites_15
       rect:
         serializedVersion: 2
         x: 960
@@ -423,19 +423,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 05823369f237cdc4e8cf4e14de22837f
+      spriteID: 50e066296df9a3a4288734ad7cce92c7
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_16
+      name: heraldoficesprites_16
       rect:
         serializedVersion: 2
         x: 1024
@@ -443,19 +443,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 253abecf2fbe18f4ba7e6fffd9c3513b
+      spriteID: 1c10088de639836499f3ae36dbdee905
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_17
+      name: heraldoficesprites_17
       rect:
         serializedVersion: 2
         x: 1088
@@ -463,19 +463,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a869e9080cb1f5c48b84c94ec836a032
+      spriteID: e5ef827f70398d34db2171888f1b24d7
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_18
+      name: heraldoficesprites_18
       rect:
         serializedVersion: 2
         x: 1152
@@ -483,19 +483,19 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ed098a1e5f5f7f34eb9070eaa1575bf5
+      spriteID: 5821f49a9bc47a9429e8a31812950921
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: abyssalcrysprites_19
+      name: heraldoficesprites_19
       rect:
         serializedVersion: 2
         x: 1216
@@ -503,13 +503,13 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8ba9b2c45b6ead546878b51c6ca1ac89
+      spriteID: ef12eb6271e7c3e46b643c4f15168a90
       vertices: []
       indices: 
       edges: []
@@ -517,7 +517,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5a7b60bd7e90ddf4e8cb23dcca7d48be
+    spriteID: cf54a5dda62530a43ba048564c9f756d
     vertices: []
     indices: 
     edges: []

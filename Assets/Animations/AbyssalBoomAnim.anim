@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AbyssalBoom
+  m_Name: AbyssalBoomAnim
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -56,7 +56,7 @@ AnimationClip:
     - time: 0.425
       value: {fileID: 21300034, guid: 710da70be378f9e47a9142b4b40e444e, type: 3}
     - time: 0.45
-      value: {fileID: 21300034, guid: 710da70be378f9e47a9142b4b40e444e, type: 3}
+      value: {fileID: 21300036, guid: 710da70be378f9e47a9142b4b40e444e, type: 3}
     - time: 0.475
       value: {fileID: 21300038, guid: 710da70be378f9e47a9142b4b40e444e, type: 3}
     attribute: m_Sprite
@@ -96,7 +96,7 @@ AnimationClip:
     - {fileID: 21300030, guid: 710da70be378f9e47a9142b4b40e444e, type: 3}
     - {fileID: 21300032, guid: 710da70be378f9e47a9142b4b40e444e, type: 3}
     - {fileID: 21300034, guid: 710da70be378f9e47a9142b4b40e444e, type: 3}
-    - {fileID: 21300034, guid: 710da70be378f9e47a9142b4b40e444e, type: 3}
+    - {fileID: 21300036, guid: 710da70be378f9e47a9142b4b40e444e, type: 3}
     - {fileID: 21300038, guid: 710da70be378f9e47a9142b4b40e444e, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2

@@ -24,9 +24,10 @@ MonoImporter:
   - ExaltedPowerUpsAmountText: {instanceID: 0}
   - ExaltedCooldownImage: {instanceID: 0}
   - Tile_Piece: {instanceID: 0}
-  - HeraldBoom: {fileID: 3572085029792750086, guid: 4d47cc347a5faf3438d1ce5bae20a594,
+  - HeraldBoom: {fileID: 8830106604419605011, guid: 0df050d0985aeeb4e811d262c8616c35,
       type: 3}
-  - AbyssalBoom: {instanceID: 0}
+  - AbyssalBoom: {fileID: 8830106604419605011, guid: 0df050d0985aeeb4e811d262c8616c35,
+      type: 3}
   - Herald_Shatter: {instanceID: 0}
   - Abyssal_Explosion: {instanceID: 0}
   executionOrder: 0

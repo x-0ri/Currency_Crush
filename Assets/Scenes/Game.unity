@@ -672,9 +672,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 1
   m_MinValue: 0
-  m_MaxValue: 1200
+  m_MaxValue: 120
   m_WholeNumbers: 1
-  m_Value: 1200
+  m_Value: 120
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2677,9 +2677,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 1
   m_MinValue: 0
-  m_MaxValue: 720
+  m_MaxValue: 72
   m_WholeNumbers: 1
-  m_Value: 720
+  m_Value: 72
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3032,9 +3032,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 1
   m_MinValue: 0
-  m_MaxValue: 75
+  m_MaxValue: 10
   m_WholeNumbers: 1
-  m_Value: 75
+  m_Value: 10
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3457,7 +3457,7 @@ MonoBehaviour:
   ExaltedCooldown: 0
   Tile_Piece: {fileID: 2797234931318261838, guid: 12e41153652695a4b9d8534133680b7d,
     type: 3}
-  HeraldBoom: {fileID: 3572085029792750086, guid: 4d47cc347a5faf3438d1ce5bae20a594,
+  HeraldBoom: {fileID: 8830106604419605011, guid: 0df050d0985aeeb4e811d262c8616c35,
     type: 3}
   AbyssalBoom: {fileID: 3572085029792750086, guid: 4d47cc347a5faf3438d1ce5bae20a594,
     type: 3}
