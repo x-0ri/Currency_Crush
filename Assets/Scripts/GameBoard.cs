@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameBoard : MonoBehaviour
-{
+{   
+
     #region Initialization_of_components
 
     #region UI
@@ -13,6 +14,11 @@ public class GameBoard : MonoBehaviour
     public RectTransform gameBoard; //nie wiem ale dziala  
     public Text Score;
     public Text ComboBreaker;
+    public GameObject RNG_Viewer;
+    public bool RNG_Viewer_ON = false;
+    public Button ButtonRNG_View;
+    public Text[] probabilities_display = new Text[13];
+
     #endregion
 
     #region PowerUps
@@ -90,25 +96,38 @@ public class GameBoard : MonoBehaviour
     #endregion
 
     #region Game_Elements
+
     [Header("Prefabs")]
-    public GameObject Tile_Piece; //cos z instancjonowaniem
+    public GameObject Tile_Piece;           // cos z instancjonowaniem
     public GameObject HeraldBoom;
     public GameObject AbyssalBoom;
 
-    static readonly int board_size = 12; //inicjalizacja wielkości planszy
+    static readonly int board_size = 12;    // inicjalizacja wielkości planszy
     int[] fills;
     Tile[,] Tile; //inicjalizacja matrycy elementów
 
-    public static int amount_of_currency_types = 13; // deklaracja wartosci ilosci typow currency
+    private readonly Point dead_bin = new Point(12, 11);    // create dummy point to store dead pieces
 
+    public float[] spawnweight;                               // create array of weights of elements for spawn chance manipulation
+    
     #endregion
 
-    #region Data_Tracking
+    #region Data_Tracking + Debugging
     List<TilePiece> update;
     List<FlippedPieces> flipped;
     List<TilePiece> dead;
-
     List<TilePiece> synchronizeboard;
+
+    [Header("Debug Mode")]
+    public GameObject Lists_Checkup;  
+    public Text update_Log;
+    public Text flipped_log;
+    public Text dead_log;
+    public Text synchronizeboard_log;
+    public Text matched_log;
+    public Text secondary_matched_log;
+    public Text finishedupdating_log;
+    public bool DEBUG = true;
 
     [HideInInspector]
     public int TotalDestroyedOrbsCounter;
@@ -118,6 +137,7 @@ public class GameBoard : MonoBehaviour
     #endregion
 
     #region Audio_And_Effects
+    [Header("Audio And Effects")]
     public AudioSource Herald_Shatter;
     public AudioSource Abyssal_Explosion;
     public bool big_oomph;
@@ -127,18 +147,19 @@ public class GameBoard : MonoBehaviour
 
     void Start()
     {
+
+        spawnweight = new float[] { 0, 1914, 1842, 1757, 1897, 1800, 1000, 0, 0, 0, 0, 0, 0 }; // Trying to keeping sum of all elements in this array at 10000 means weight 1 = 0,01%
+                                                                                             // !!!! First element spawnweight[0] MUST BE = 0 !!!!!
         fills = new int[board_size];
         update = new List<TilePiece>();
         flipped = new List<FlippedPieces>();
         dead = new List<TilePiece>();
-
         synchronizeboard = new List<TilePiece>();
 
         JewellerPowerUpProgress = JewellerPowerUpRequirements;
         RegretPowerUpProgress = RegretPowerUpRequirements;
         VaalPowerUpProgress = VaalPowerUpRequirements;
         ExaltedPowerUpProgress = ExaltedPowerUpRequirements;
-
 
         JewellerButton.enabled = false;
         RegretButton.enabled = false;
@@ -147,9 +168,7 @@ public class GameBoard : MonoBehaviour
 
         JewellerPowerUpPointIndex = null;
         VaalPowerUpIndexes = new List<Point>();
-
         ExaltedPowerUpIndexes = new List<Point>();
-
         RegretIndexList = new List<Tile>();
 
         JewellerCooldown = 1;
@@ -164,6 +183,8 @@ public class GameBoard : MonoBehaviour
         ExaltedCooldown = 1;
         ExaltedCooldownImage.fillAmount = ExaltedCooldown;
 
+        
+
         InitializeBoard();
         VerifyBoardInitialization();
         InstantiateBoard();
@@ -174,6 +195,52 @@ public class GameBoard : MonoBehaviour
 
     void Update()
     {
+        #region 0. Keybind / Debug Handling
+
+        #region Debug view toggle
+
+        if (Input.GetKeyDown("f1")) DEBUG = !DEBUG;
+
+        if (!DEBUG)
+        {
+            Lists_Checkup.SetActive(false);
+            RectTransform pos = Lists_Checkup.GetComponent<RectTransform>();
+            pos.anchoredPosition = new Vector2(550, 300);
+        }   // deactivate view of debugger if DEBUG = false
+
+        else
+        {
+            RectTransform pos = Lists_Checkup.GetComponent<RectTransform>();
+            pos.anchoredPosition = new Vector2(550, 0);
+            Lists_Checkup.SetActive(true);
+        }           // activate view of debugger if DEBUG = true
+
+        #endregion
+
+        #region RNG Viewer toggle
+
+        // bool is toogled by RNGView_Toggle() function via button only   
+
+        if (!RNG_Viewer_ON)
+        {
+            RNG_Viewer.SetActive(false);                    //deactivate
+            RectTransform pos = RNG_Viewer.GetComponent<RectTransform>();
+            pos.anchoredPosition = new Vector2(305, 950);   // move outside the camera
+        }   // deactivate RNG Viewer
+
+        else
+        {
+            UpdateProbabilities();
+            RectTransform pos = RNG_Viewer.GetComponent<RectTransform>();
+            pos.anchoredPosition = new Vector2(975, 310);   // move to tab's place
+            RNG_Viewer.SetActive(true);                     // activate
+        }           // activate RNG Viewer
+        #endregion
+
+        #endregion
+
+        #region 1. Check for powerups usage
+
         if (UsingJeweller && JewellerPowerUpPointIndex != null) //add point from jewellers powerup to update, must be done to avoid null exception
         {
             Tile JewellerUsedTile = GetTileAtPoint(JewellerPowerUpPointIndex);
@@ -205,34 +272,38 @@ public class GameBoard : MonoBehaviour
 
         }
 
-        List<TilePiece> finishedUpdating = new List<TilePiece>();           // utwórz listę elementów których uaktualnianie się zakończyło
-        List<Point> ToRemoveFromVaalPowerUpIndexes = new List<Point>();
+#endregion
+
+        List<TilePiece> finishedUpdating = new List<TilePiece>();           // make a list of elements that which finished updating
+        List<Point> ToRemoveFromVaalPowerUpIndexes = new List<Point>();     // make a list of pieces to remove
         List<Point> ToRemoveFromExaltedPowerUpIndexes = new List<Point>();
 
-        for (int i = 0; i < update.Count; i++)                              // pętla for powtarzająca się 
+        for (int i = 0; i < update.Count; i++)                              
         {
             TilePiece piece = update[i];                                    // utwórz zmienną będącą indeksem i z Listy updated
             if (!piece.UpdatePiece()) finishedUpdating.Add(piece);          // dodaj do listy finishedUpdating piece
         }
+
         //Debug.Log(finishedUpdating.Count);
         //ComboCounter = 0;
 
         for (int i = 0; i < finishedUpdating.Count; i++)
         {
-            if (CheckIfBoardIsStatic())
+            // enter main update loop only if board is static or there are no dead elements
+            if (CheckIfBoardIsStatic())                                  
             {
                
                 TilePiece piece = finishedUpdating[i];                  // utwórz zmienną typu TilePiece o wartości indeksu listy finishedupdating     
                 FlippedPieces flip = GetFlipped(piece);
                 TilePiece flippedPiece = null;
 
-
                 int x = (int)piece.index.x;
                 fills[x] = Mathf.Clamp(fills[x] -1 , 0, board_size);
 
                 List<Point> matched = IsConnected(piece.index, true);
 
-                //add point from jewellers powerup to matched
+                #region Add points from powerups to matched
+
                 if (UsingJeweller && JewellerPowerUpPointIndex != null)
                 {
                     matched.Add(JewellerPowerUpPointIndex);
@@ -262,6 +333,8 @@ public class GameBoard : MonoBehaviour
 
                 }
 
+#endregion
+
                 List<Point> secondary_matched = new List<Point>();
 
                 bool wasFlipped = (flip != null);
@@ -274,253 +347,256 @@ public class GameBoard : MonoBehaviour
 
                 if (matched.Count == 0) // jeżeli nie stworzone zostało dopasowanie
                 {
-                    if (wasFlipped) // jeśli zamienione zostały elementy
-                    FlipPieces(piece.index, flippedPiece.index, false); // nie zamieniaj pozycji elementów
+                    if (wasFlipped)                                     // jeśli zamienione zostały elementy
+                        FlipPieces(piece.index, flippedPiece.index, false); // nie zamieniaj pozycji elementów
                 }
 
                 else // jeżeli stworzone zostało dopasowanie
                 {
-                if (usedMouse)
-                {
-                    if (JewellerCooldown > 0)
+
+                    #region Update of powerup cooldowns
+
+                    if (usedMouse)
                     {
-                        JewellerCooldown -= 0.25f;
-                        JewellerCooldownImage.fillAmount = JewellerCooldown;
-
-                    }
-
-                    if (RegretCooldown > 0)
-                    {
-                        RegretCooldown -= 0.01f;
-                        RegretCooldownImage.fillAmount = RegretCooldown;
-
-                    }
-
-                    if (VaalCooldown > 0)
-                    {
-                        VaalCooldown -= 0.1f;
-                        VaalCooldownImage.fillAmount = VaalCooldown;
-                    }
-
-                    if (ExaltedCooldown > 0)
-                    {
-                        ExaltedCooldown -= 0.05f;
-                        ExaltedCooldownImage.fillAmount = ExaltedCooldown;
-
-                    }
-                    /*
-                    Debug.Log(JewellerCooldown);
-                    Debug.Log(RegretCooldown);
-                    Debug.Log(VaalCooldown);                    
-                    Debug.Log(ExaltedCooldown);
-                    */
-
-                    GameBoard.usedMouse = false;
-                }
-
-                ComboCounter += matched.Count;
-                ComboCounter += secondary_matched.Count;
-
-                List<TilePiece> Orb_Of_Alteration_Match = new List<TilePiece>();
-                List<TilePiece> Jewellers_Orb_Match = new List<TilePiece>();
-                List<TilePiece> Chromatic_Orb_Match = new List<TilePiece>();
-                List<TilePiece> Orb_Of_Alchemy_Match = new List<TilePiece>();
-                List<TilePiece> Orb_Of_Fusing_Match = new List<TilePiece>();
-                List<TilePiece> Regal_Orb_Match = new List<TilePiece>();
-                List<TilePiece> Orb_Of_Regret_Match = new List<TilePiece>();
-                List<TilePiece> Vaal_Orb_Match = new List<TilePiece>();
-                List<TilePiece> Chaos_Orb_Match = new List<TilePiece>();
-                List<TilePiece> Divine_Orb_Match = new List<TilePiece>();
-                List<TilePiece> Exalted_Orb_Match = new List<TilePiece>();
-                List<TilePiece> Mirror_Of_Kalandra_Match = new List<TilePiece>();
-
-                foreach (Point pnt in matched)                // usuń dopasowane elementy
-                {
-
-                    Tile tile = GetTileAtPoint(pnt);
-                    TilePiece tilepiece = tile.GetPiece();
-
-                    switch (tilepiece.currency_type)
-                    {
-                        case 1: //orbs of alteration
-                            {
-                                Orb_Of_Alteration_Match.Add(tilepiece);
-                                JewellerPowerUpProgress--;
-                                break;
-                            }
-                        case 2: //jewellers orb
-                            {
-                                Jewellers_Orb_Match.Add(tilepiece);
-                                JewellerPowerUpProgress -= 2;
-
-                                break;
-                            }
-                        case 3: // chromatic orb
-                            {
-                                Chromatic_Orb_Match.Add(tilepiece);
-                                JewellerPowerUpProgress -= 6;
-
-                                break;
-                            }
-                        case 4: // alchemy orb
-                            {
-                                Orb_Of_Alchemy_Match.Add(tilepiece);
-                                RegretPowerUpProgress--;
-                                break;
-
-                            }
-                        case 5: // orb of fusing
-                            {
-                                Orb_Of_Fusing_Match.Add(tilepiece);
-                                JewellerPowerUpProgress -= 8;
-
-                                break;
-                            }
-                        case 6: // regal orb
-                            {
-                                Regal_Orb_Match.Add(tilepiece);
-                                ExaltedPowerUpProgress--;
-                                break;
-                            }
-                        case 7: // orb of regret
-                            {
-                                Orb_Of_Regret_Match.Add(tilepiece);
-                                RegretPowerUpProgress--;
-                                break;
-                            }
-                        case 8: // vaal orb
-                            {
-                                Vaal_Orb_Match.Add(tilepiece);
-                                VaalPowerUpProgress--;
-                                break;
-                            }
-                        case 9: // chaos orb
-                            {
-                                Chaos_Orb_Match.Add(tilepiece);
-                                ExaltedPowerUpProgress -= 2;
-                                break;
-                            }
-                        case 10: // divine orb
-                            {
-                                Divine_Orb_Match.Add(tilepiece);
-                                ExaltedPowerUpProgress -= 10;
-                                break;
-                            }
-                        case 11: // Exalted orb
-                            {
-                                Exalted_Orb_Match.Add(tilepiece);
-                                ExaltedPowerUpProgress -= 120;
-                                break;
-                            }
-                        case 12: // Mirror Of Kalandra
-                            {
-                                Mirror_Of_Kalandra_Match.Add(tilepiece);
-                                break;
-                            }
-
-                    }       // adding tilepiece to it's corresponding currency pool -> sorting removed currency
-
-                    secondary_matched.AddRange(CreateSecondaryMatchList(Orb_Of_Alteration_Match));
-                    secondary_matched.AddRange(CreateSecondaryMatchList(Jewellers_Orb_Match));
-                    secondary_matched.AddRange(CreateSecondaryMatchList(Chromatic_Orb_Match));
-                    secondary_matched.AddRange(CreateSecondaryMatchList(Orb_Of_Alchemy_Match));
-                    secondary_matched.AddRange(CreateSecondaryMatchList(Orb_Of_Fusing_Match));
-                    secondary_matched.AddRange(CreateSecondaryMatchList(Regal_Orb_Match));
-                    secondary_matched.AddRange(CreateSecondaryMatchList(Orb_Of_Regret_Match));
-                    secondary_matched.AddRange(CreateSecondaryMatchList(Vaal_Orb_Match));
-                    secondary_matched.AddRange(CreateSecondaryMatchList(Chaos_Orb_Match));
-                    secondary_matched.AddRange(CreateSecondaryMatchList(Divine_Orb_Match));
-                    secondary_matched.AddRange(CreateSecondaryMatchList(Exalted_Orb_Match));
-                    secondary_matched.AddRange(CreateSecondaryMatchList(Mirror_Of_Kalandra_Match));
-
-                    if (tilepiece != null)
+                        if (JewellerCooldown > 0)
                         {
-                            tilepiece.gameObject.SetActive(false);  // zamień elementy na nieaktywne
-                            dead.Add(tilepiece);                    // dodaj do listy martwych elementów                
-                            TotalDestroyedOrbsCounter++;            // zwieksz wynik
-                            Score.text = TotalDestroyedOrbsCounter.ToString();  //zaktualizuj wynik na planszy
-                        
-                            Play_Herald_Shatter();
-                            DisplayEffect(tilepiece, 0);
+                            JewellerCooldown -= 0.25f;
+                            JewellerCooldownImage.fillAmount = JewellerCooldown;
                         }
 
-                    tile.SetPiece(null);
+                        if (RegretCooldown > 0)
+                        {
+                            RegretCooldown -= 0.01f;
+                            RegretCooldownImage.fillAmount = RegretCooldown;
+                        }
 
-                }
+                        if (VaalCooldown > 0)
+                        {
+                            VaalCooldown -= 0.1f;
+                            VaalCooldownImage.fillAmount = VaalCooldown;
+                        }
 
-                foreach (Point pnt_sec in secondary_matched)
-                {
+                        if (ExaltedCooldown > 0)
+                        {
+                            ExaltedCooldown -= 0.05f;
+                            ExaltedCooldownImage.fillAmount = ExaltedCooldown;
+                        }
+                        /*
+                        Debug.Log(JewellerCooldown);
+                        Debug.Log(RegretCooldown);
+                        Debug.Log(VaalCooldown);                    
+                        Debug.Log(ExaltedCooldown);
+                        */
 
-                    Tile tile = GetTileAtPoint(pnt_sec);
-                    TilePiece tilepiece = tile.GetPiece();
+                        GameBoard.usedMouse = false;
+                    }
+#endregion// reduce powerups cooldown
 
-                    switch (tile.currency_type)
+                    ComboCounter += matched.Count;
+                    ComboCounter += secondary_matched.Count;
+
+                    #region Initializing currency "bins"
+
+                    List<TilePiece> Orb_Of_Alteration_Match = new List<TilePiece>();
+                    List<TilePiece> Jewellers_Orb_Match = new List<TilePiece>();
+                    List<TilePiece> Chromatic_Orb_Match = new List<TilePiece>();
+                    List<TilePiece> Orb_Of_Alchemy_Match = new List<TilePiece>();
+                    List<TilePiece> Orb_Of_Fusing_Match = new List<TilePiece>();
+                    List<TilePiece> Regal_Orb_Match = new List<TilePiece>();
+                    List<TilePiece> Orb_Of_Regret_Match = new List<TilePiece>();
+                    List<TilePiece> Vaal_Orb_Match = new List<TilePiece>();
+                    List<TilePiece> Chaos_Orb_Match = new List<TilePiece>();
+                    List<TilePiece> Divine_Orb_Match = new List<TilePiece>();
+                    List<TilePiece> Exalted_Orb_Match = new List<TilePiece>();
+                    List<TilePiece> Mirror_Of_Kalandra_Match = new List<TilePiece>();
+
+#endregion
+
+                    foreach (Point pnt in matched)                      // usuń dopasowane elementy
                     {
-                        case 1: //orbs of alteration
-                            {
-                                JewellerPowerUpProgress--;
-                                break;
-                            }
-                        case 2: //jewellers orb
-                            {
-                                JewellerPowerUpProgress -= 2;
-                                break;
-                            }
-                        case 3: // chromatic orb
-                            {
-                                JewellerPowerUpProgress -= 6;
-                                break;
-                            }
-                        case 4: // alchemy orb
-                            {
-                                RegretPowerUpProgress--;
-                                break;
-                            }
-                        case 5: // orb of fusing
-                            {
-                                JewellerPowerUpProgress -= 8;
-                                break;
-                            }
-                        case 6: // regal orb
-                            {
-                                break;
-                            }
-                        case 7: // orb of regret
-                            {
-                                RegretPowerUpProgress--;
-                                break;
-                            }
-                        case 8: // vaal orb
-                            {
-                                VaalPowerUpProgress--;
-                                break;
-                            }
-                        case 9: // chaos orb
-                            {
-                                break;
-                            }
-                        case 10: // divine orb
-                            {
-                                break;
 
-                            }
-                        case 11: // Exalted orb
-                            {
-                                break;
-                            }
-                        case 12: // Mirror Of Kalandra
-                            {
-                                break;
-                            }
+                        Tile tile = GetTileAtPoint(pnt);
+                        TilePiece tilepiece = tile.GetPiece();
 
-                    }       // adding tilepiece to it's corresponding currency pool -> sorting removed currency
+                        //debug line
+                        if (tilepiece == null)
+                        {
+                            Debug.Log("TILEPIECE FAIL (null ?) at : " + pnt.x + " , " + pnt.y);
+                        }
+                        switch (tilepiece.currency_type)
+                        {
+                            case 1: //orbs of alteration
+                                {
+                                    Orb_Of_Alteration_Match.Add(tilepiece);
+                                    JewellerPowerUpProgress--;
+                                    break;
+                                }
+                            case 2: //jewellers orb
+                                {
+                                    Jewellers_Orb_Match.Add(tilepiece);
+                                    JewellerPowerUpProgress -= 2;
 
-                    if (tilepiece != null)
+                                    break;
+                                }
+                            case 3: // chromatic orb
+                                {
+                                    Chromatic_Orb_Match.Add(tilepiece);
+                                    JewellerPowerUpProgress -= 6;
+
+                                    break;
+                                }
+                            case 4: // alchemy orb
+                                {
+                                    Orb_Of_Alchemy_Match.Add(tilepiece);
+                                    RegretPowerUpProgress--;
+                                    break;
+
+                                }
+                            case 5: // orb of fusing
+                                {
+                                    Orb_Of_Fusing_Match.Add(tilepiece);
+                                    JewellerPowerUpProgress -= 8;
+
+                                    break;
+                                }
+                            case 6: // regal orb
+                                {
+                                    Regal_Orb_Match.Add(tilepiece);
+                                    ExaltedPowerUpProgress--;
+                                    break;
+                                }
+                            case 7: // orb of regret
+                                {
+                                    Orb_Of_Regret_Match.Add(tilepiece);
+                                    RegretPowerUpProgress--;
+                                    break;
+                                }
+                            case 8: // vaal orb
+                                {
+                                    Vaal_Orb_Match.Add(tilepiece);
+                                    VaalPowerUpProgress--;
+                                    break;
+                                }
+                            case 9: // chaos orb
+                                {
+                                    Chaos_Orb_Match.Add(tilepiece);
+                                    ExaltedPowerUpProgress -= 2;
+                                    break;
+                                }
+                            case 10: // divine orb
+                                {
+                                    Divine_Orb_Match.Add(tilepiece);
+                                    ExaltedPowerUpProgress -= 10;
+                                    break;
+                                }
+                            case 11: // Exalted orb
+                                {
+                                    Exalted_Orb_Match.Add(tilepiece);
+                                    ExaltedPowerUpProgress -= 120;
+                                    break;
+                                }
+                            case 12: // Mirror Of Kalandra
+                                {
+                                    Mirror_Of_Kalandra_Match.Add(tilepiece);
+                                    break;
+                                }
+
+                        }           // adding tilepiece to it's corresponding currency pool -> sorting removed currency
+
+                        secondary_matched.AddRange(CreateSecondaryMatchList(Orb_Of_Alteration_Match));
+                        secondary_matched.AddRange(CreateSecondaryMatchList(Jewellers_Orb_Match));
+                        secondary_matched.AddRange(CreateSecondaryMatchList(Chromatic_Orb_Match));
+                        secondary_matched.AddRange(CreateSecondaryMatchList(Orb_Of_Alchemy_Match));
+                        secondary_matched.AddRange(CreateSecondaryMatchList(Orb_Of_Fusing_Match));
+                        secondary_matched.AddRange(CreateSecondaryMatchList(Regal_Orb_Match));
+                        secondary_matched.AddRange(CreateSecondaryMatchList(Orb_Of_Regret_Match));
+                        secondary_matched.AddRange(CreateSecondaryMatchList(Vaal_Orb_Match));
+                        secondary_matched.AddRange(CreateSecondaryMatchList(Chaos_Orb_Match));
+                        secondary_matched.AddRange(CreateSecondaryMatchList(Divine_Orb_Match));
+                        secondary_matched.AddRange(CreateSecondaryMatchList(Exalted_Orb_Match));
+                        secondary_matched.AddRange(CreateSecondaryMatchList(Mirror_Of_Kalandra_Match));
+
+                        if (tilepiece != null)
+                        {
+                            Play_Herald_Shatter();
+                            DisplayEffect(tilepiece, 0);
+                            DeactivatePiece(tilepiece);                                                
+                        }
+
+                        tile.SetPiece(null);        // wat?? gotta inspect this further
+
+                    }
+
+                    foreach (Point pnt_sec in secondary_matched)
                     {
-                        tilepiece.gameObject.SetActive(false);              // zamień elementy na nieaktywne
-                        dead.Add(tilepiece);                                // dodaj do listy martwych elementów                
-                        TotalDestroyedOrbsCounter++;                        // zwieksz wynik
-                        Score.text = TotalDestroyedOrbsCounter.ToString();  //zaktualizuj wynik na planszy
+
+                        Tile tile = GetTileAtPoint(pnt_sec);
+                        TilePiece tilepiece = tile.GetPiece();
+
+                        switch (tile.currency_type)
+                        {
+                            case 1: //orbs of alteration
+                                {
+                                    JewellerPowerUpProgress--;
+                                    break;
+                                }
+                            case 2: //jewellers orb
+                                {
+                                    JewellerPowerUpProgress -= 2;
+                                    break;
+                                }
+                            case 3: // chromatic orb
+                                {
+                                    JewellerPowerUpProgress -= 6;
+                                    break;
+                                }
+                            case 4: // alchemy orb
+                                {
+                                    RegretPowerUpProgress--;
+                                    break;
+                                }
+                            case 5: // orb of fusing
+                                {
+                                    JewellerPowerUpProgress -= 8;
+                                    break;
+                                }
+                            case 6: // regal orb
+                                {
+                                    break;
+                                }
+                            case 7: // orb of regret
+                                {
+                                    RegretPowerUpProgress--;
+                                    break;
+                                }
+                            case 8: // vaal orb
+                                {
+                                    VaalPowerUpProgress--;
+                                    break;
+                                }
+                            case 9: // chaos orb
+                                {
+                                    break;
+                                }
+                            case 10: // divine orb
+                                {
+                                    break;
+
+                                }
+                            case 11: // Exalted orb
+                                {
+                                    break;
+                                }
+                            case 12: // Mirror Of Kalandra
+                                {
+                                    break;
+                                }
+
+                        }       // adding tilepiece to it's corresponding currency pool -> sorting removed currency
+
+                        if (tilepiece != null)
+                        {                        
+                           
                             if (big_oomph)
                             {
                                 Play_Abyssal_Explosion();
@@ -529,102 +605,120 @@ public class GameBoard : MonoBehaviour
                             else
                                 DisplayEffect(tilepiece, 0);
 
+                            DeactivatePiece(tilepiece);
                         }
 
-                    tile.SetPiece(null);
+                        tile.SetPiece(null);
 
+                    }
+
+                    #region PowerUp Counters
+
+#region Jewellers counters
+
+                    while (JewellerPowerUpProgress <= 0)
+                    {
+                        int carry = JewellerPowerUpProgress * (-1);
+                        JewellerPowerUpProgress = JewellerPowerUpRequirements - carry;
+                        JewellerPowerUpsAmount++;
+                    }
+
+                    if (JewellerPowerUpsAmount != 0)
+                    {
+                        JewellerButton.enabled = true;
+                        JewellerPowerUpsAmountText.text = (JewellerPowerUpsAmount.ToString());
+                    }
+
+                    JewellerPowerUp.value = JewellerPowerUpProgress;
+
+#endregion
+
+#region Regrets Counters
+
+                    while (RegretPowerUpProgress <= 0)
+                    {
+                        int carry = RegretPowerUpProgress * (-1);
+                        RegretPowerUpProgress = RegretPowerUpRequirements - carry;
+                        RegretPowerUpsAmount++;
+                    }
+
+                    if (RegretPowerUpsAmount != 0)
+                    {
+                        RegretButton.enabled = true;
+                        RegretPowerUpsAmountText.text = (RegretPowerUpsAmount.ToString());
+                    }
+
+                    RegretPowerUp.value = RegretPowerUpProgress;
+
+#endregion
+
+#region Vaal counters
+
+                    while (VaalPowerUpProgress <= 0)
+                    {
+                        int carry = VaalPowerUpProgress * (-1);
+                        VaalPowerUpProgress = VaalPowerUpRequirements - carry;
+                        VaalPowerUpsAmount++;
+                    }
+
+                    if (VaalPowerUpsAmount != 0)
+                    {
+                        VaalButton.enabled = true;
+                        VaalPowerUpsAmountText.text = (VaalPowerUpsAmount.ToString());
+                    }
+
+                    VaalPowerUp.value = VaalPowerUpProgress;
+
+#endregion
+
+#region Exalted counters
+
+                    while (ExaltedPowerUpProgress <= 0)
+                    {
+                        int carry = ExaltedPowerUpProgress * (-1);
+                        ExaltedPowerUpProgress = ExaltedPowerUpRequirements - carry;
+                        ExaltedPowerUpsAmount++;
+                    }
+
+                    if (ExaltedPowerUpsAmount != 0)
+                    {
+                        ExaltedButton.enabled = true;
+                        ExaltedPowerUpsAmountText.text = (ExaltedPowerUpsAmount.ToString());
+                    }
+
+                    ExaltedPowerUp.value = ExaltedPowerUpProgress;
+
+#endregion
+
+                    ComboBreaker.text = ("+ " + ComboCounter.ToString());
+
+#endregion
+
+                    ApplyGravityToBoard(); // apply falling function               
+                                     
                 }
-
-                // Jewellers counters
-
-                while (JewellerPowerUpProgress <= 0)
-                {
-                    int carry = JewellerPowerUpProgress * (-1);
-                    JewellerPowerUpProgress = JewellerPowerUpRequirements - carry;
-                    JewellerPowerUpsAmount++;
-                }
-
-                if (JewellerPowerUpsAmount != 0)
-                {
-                    JewellerButton.enabled = true;
-                    JewellerPowerUpsAmountText.text = (JewellerPowerUpsAmount.ToString());
-                }
-
-                JewellerPowerUp.value = JewellerPowerUpProgress;
-
-                // end
-
-
-                // Regret counters
-
-                while (RegretPowerUpProgress <= 0)
-                {
-                    int carry = RegretPowerUpProgress * (-1);
-                    RegretPowerUpProgress = RegretPowerUpRequirements - carry;
-                    RegretPowerUpsAmount++;
-                }
-
-                if (RegretPowerUpsAmount != 0)
-                {
-                    RegretButton.enabled = true;
-                    RegretPowerUpsAmountText.text = (RegretPowerUpsAmount.ToString());
-                }
-
-                RegretPowerUp.value = RegretPowerUpProgress;
-
-                //end
-
-                // Vaal counters
-
-                while (VaalPowerUpProgress <= 0)
-                {
-                    int carry = VaalPowerUpProgress * (-1);
-                    VaalPowerUpProgress = VaalPowerUpRequirements - carry;
-                    VaalPowerUpsAmount++;
-                }
-
-                if (VaalPowerUpsAmount != 0)
-                {
-                    VaalButton.enabled = true;
-                    VaalPowerUpsAmountText.text = (VaalPowerUpsAmount.ToString());
-                }
-
-                VaalPowerUp.value = VaalPowerUpProgress;
-
-                // end
-
-                // Exalted counters
-
-                while (ExaltedPowerUpProgress <= 0)
-                {
-                    int carry = ExaltedPowerUpProgress * (-1);
-                    ExaltedPowerUpProgress = ExaltedPowerUpRequirements - carry;
-                    ExaltedPowerUpsAmount++;
-                }
-
-                if (ExaltedPowerUpsAmount != 0)
-                {
-                    ExaltedButton.enabled = true;
-                    ExaltedPowerUpsAmountText.text = (ExaltedPowerUpsAmount.ToString());
-                }
-
-                ExaltedPowerUp.value = ExaltedPowerUpProgress;
-
-                // end
-
-
-                ComboBreaker.text = ("+ " + ComboCounter.ToString());
-
-
-
-                ApplyGravityToBoard();
-            }
-
+                
             flipped.Remove(flip); //usuń element flip po zaktualizowaniu
             update.Remove(piece);
+
+                /*
+            if (CheckIfBoardIsStatic() && update.Count == 0)
+            {
+                RefillHole();
+            }
+            */
+
+                if (DEBUG)
+            {
+                matched_log.text = matched.Count.ToString();
+                secondary_matched_log.text = update.Count.ToString();
+            }
+
+            }
+
         }
-              
-        }
+
+        #region Cleanup after finished frame
 
         JewellerPowerUpPointIndex = null;
 
@@ -637,14 +731,27 @@ public class GameBoard : MonoBehaviour
         {
             ExaltedPowerUpIndexes.Remove(p);
         }
+
         VaalPowerUpEvent = 666;
         ExaltedPowerUpEvent = 0;
         big_oomph = false;
+
+        if (DEBUG)
+        {
+            update_Log.text = update.Count.ToString();
+            flipped_log.text = flipped.Count.ToString();
+            dead_log.text = dead.Count.ToString();
+            synchronizeboard_log.text = synchronizeboard.Count.ToString();
+            finishedupdating_log.text = finishedUpdating.Count.ToString();
+        }
+
+#endregion
+
     }
 
-    #region Board_Functions
+#region Board_Functions
 
-    #region Creation
+#region Creation
     void InitializeBoard() //inicjalizowanie planszy
     {
         Tile = new Tile[board_size, board_size]; //inicjalizacja tablicy 2D board
@@ -702,15 +809,16 @@ public class GameBoard : MonoBehaviour
                 orb.Initialize(val, new Point(x, y), Orbs[val]);                        //zmiana Sprite pojedynczego elementu
                 tile.SetPiece(orb);                                                     //wygeneruj element planszy - brak tej linijki powoduje wartosc null w obiekcie
                 synchronizeboard.Add(orb);
+
             }
         }
 
         Debug.Log("Instantiation of the board : Success");
     }
 
-    #endregion
+#endregion
 
-    #region Checks
+#region Checks
 
     private bool CheckFor4InLine(List<TilePiece> Currency_Match, int direction) // 0 - vertical check , 1 - horizontal check , returns true if 4 in one line
     {
@@ -839,9 +947,21 @@ public class GameBoard : MonoBehaviour
         return connected;
     }
 
-    #endregion
+#endregion
 
-    #region Game_Functions
+#region Game_Functions
+
+    public void DeactivatePiece(TilePiece tilepiece)                        // function deactivating piece
+    {
+
+        tilepiece.rect.anchoredPosition = GetPositionFromPoint(dead_bin);   // move piece to dead spot
+        //tilepiece.index = dead_bin;
+        dead.Add(tilepiece);                                                // add to dead element list
+        tilepiece.gameObject.SetActive(false);                              // deactivate piece, so it does not render
+        TotalDestroyedOrbsCounter++;                                        // increase score
+        Score.text = TotalDestroyedOrbsCounter.ToString();                  // update score on board
+
+    }
     public void ApplyGravityToBoard()
     {
 
@@ -849,20 +969,21 @@ public class GameBoard : MonoBehaviour
         {
             for (int y = 0; y < board_size; y++) // scan trough whole board
             {
-                Point p = new Point(x, y);
-                Tile tile = GetTileAtPoint(p);
-                int currency_type = GetCurrencyTypeAtPoint(p);
+                Point p = new Point(x, y);                          //initiate new point
+                Tile tile = GetTileAtPoint(p);                      //initiate tile at new point
+                int currency_type = GetCurrencyTypeAtPoint(p);      //
 
-                if (currency_type != 0) continue; //if not a hole or corrupt move to the next
+                if (currency_type != 0) continue;                   //if not a hole or corrupt move to the next
 
-                for (int ny = (y + 1); ny <= board_size; ny++) // go from y + 1 to board limit !?
+                
+                for (int ny = (y + 1); ny <= board_size; ny++)              // go from y + 1 to board limit !?
                 {
-                    Point next = new Point(x, ny);              //make Point indicator of piece above
+                    Point next = new Point(x, ny);                          // make Point indicator of piece above
                     int nextCurrency_type = GetCurrencyTypeAtPoint(next);
-                    if (nextCurrency_type == 0) // very important, idk why but if it gets commented update gets miscounted which results in NullException
+                    if (nextCurrency_type == 0)                             // very important, idk why but if it gets commented update gets miscounted which results in NullException
                         continue;
 
-                    if (nextCurrency_type != -1) // if next currency type is not hole
+                    if (nextCurrency_type != -1)                            // if next currency type is not hole
                     {
                         Tile got = GetTileAtPoint(next);
                         TilePiece piece = got.GetPiece();
@@ -874,28 +995,34 @@ public class GameBoard : MonoBehaviour
                         //Replace the hole
                         got.SetPiece(null);
                     }
-                    else //Hit an end
+                    
+                    else                                                    //Hit an end
                     {
-                        //Debug.Log("Filling holes");
-                        int newCurrencyType = RollCurrencyType();
-                        TilePiece piece;// = null;
-                        Point spawnPoint = new Point(x, ny + fills[x]);
+                        
+                        Debug.Log("Filling holes");
+                        int newCurrencyType = RollCurrencyType();                               // reroll currency type
+                        TilePiece piece;                                                        // = null;
+                        Point spawnPoint = new Point(x, ny + fills[x]);                         // create spawn point for new placement
 
-                        if (dead.Count > 0)
+
+                        
+                        if (dead.Count > 0)                                                     // if there exists "dead" element
                         {
-                            TilePiece revived = dead[0];
-                            revived.gameObject.SetActive(true);
-                            revived.rect.anchoredPosition = GetPositionFromPoint(spawnPoint);
-                            piece = revived;
+                            TilePiece revived = dead[0];                                        // assign to new tilepiece             
+                            revived.gameObject.SetActive(true);                                 // set state as active
+                            revived.rect.anchoredPosition = GetPositionFromPoint(spawnPoint);   // set position to spawnpoint
+                            piece = revived;                                                    // assignd new piece to
 
                             dead.RemoveAt(0);
                         }
+                        
                         else //should never be called, is here just in case
                         {
                             GameObject obj = Instantiate(Tile_Piece, gameBoard);
                             TilePiece t = obj.GetComponent<TilePiece>();
                             piece = t;
                         }
+                        
 
                         piece.Initialize(newCurrencyType, p, Orbs[newCurrencyType]);
                         piece.rect.anchoredPosition = GetPositionFromPoint(spawnPoint);
@@ -905,16 +1032,55 @@ public class GameBoard : MonoBehaviour
                         ResetPiece(piece);
                         fills[x]++;
 
-                        //fill the hole
                     }
+                    
                     break;
-                }
+                    
+            }           
 
-
-            }
+        }
         }
     }
+    public void RefillHole()
+    {        
 
+        if (dead.Count > 0) // if there exists element in "dead" list then:
+        {
+            
+            for (int x = 0;  x < board_size; x++)
+            {
+
+                for (int y = 0; y < board_size; y++)
+                {
+
+                Point spawnpoint = new Point(x, y);
+                Tile tilecheck = GetTileAtPoint(spawnpoint);
+                TilePiece tilepiececheck = tilecheck.GetPiece();
+
+                if (tilepiececheck == null)
+                {
+
+                        Debug.Log("Found empty tile at : " + spawnpoint.x + "," + spawnpoint.y);
+
+                        TilePiece reuse = dead[0];                  // take 
+                        int currency_type = RollCurrencyType();     // reroll currency type of block
+                        reuse.Initialize(currency_type, spawnpoint, Orbs[currency_type]);
+                        reuse.rect.anchoredPosition = new Vector2(-182 + (33 * spawnpoint.x), -181 + (33 * spawnpoint.y)); // set Position to match spawnpoint
+                        reuse.gameObject.SetActive(true);
+
+                        Debug.Log("Reused tile at point : " + spawnpoint.x + "," + spawnpoint.y);
+                        dead.RemoveAt(0);
+
+                        tilecheck.SetPiece(reuse);
+
+                    }
+
+                }
+
+            }
+                 
+        }    
+    } // buggy buggy not used atm
     private List<Point> CreateSecondaryMatchList(List<TilePiece> Currency_Match) // for example : takes Jewellers_Orb_Match and returns list of points to add to secondary match
     {
         List<Point> temp_secondary_match = new List<Point>();
@@ -983,12 +1149,15 @@ public class GameBoard : MonoBehaviour
 
         return temp_secondary_match;
     }
+    public void RNGView_Toggle() // used by button only
+    {
+        RNG_Viewer_ON = !RNG_Viewer_ON;        
+    }
+#endregion
 
-    #endregion
+#endregion
 
-    #endregion
-
-    #region PowerUpFunctions
+#region PowerUpFunctions
     public void PowerUp_Regret()
     {
         if (RegretPowerUpsAmount >= 1 && RegretCooldown <= 0)
@@ -1179,7 +1348,7 @@ public class GameBoard : MonoBehaviour
             ExaltedCooldownImage.fillAmount = ExaltedCooldown;
 
 
-            Debug.Log("Executing event :exalted orb");
+            Debug.Log("Executing event : Exalted orb");
             ExaltedPowerUpEvent = 1;
 
             List<Point> available = new List<Point>();
@@ -1223,7 +1392,7 @@ public class GameBoard : MonoBehaviour
         ExaltedButton.enabled = true;
     }
 
-    #region PowerUpSubFunctions
+#region PowerUpSubFunctions
 
     void DestroyBoard() //zniszczenie planszy
     {
@@ -1286,11 +1455,11 @@ public class GameBoard : MonoBehaviour
     }
 
 
-    #endregion
+#endregion
 
-    #endregion
+#endregion
 
-    #region EffectsFunctions
+#region EffectsFunctions
 
     public void Play_Herald_Shatter()
     {
@@ -1322,11 +1491,11 @@ public class GameBoard : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
-    #region PieceManipulationFunctions
+#region Piece manipulation functions
 
-    #region Point_Related
+#region Point_Related
 
     public Vector2 GetPositionFromPoint(Point p)
     {
@@ -1363,9 +1532,9 @@ public class GameBoard : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
-    #region Piece_Related
+#region Piece_Related
 
     FlippedPieces GetFlipped(TilePiece t)
     {
@@ -1417,21 +1586,163 @@ public class GameBoard : MonoBehaviour
 
     #endregion
 
-    int RollCurrencyType()
+private float CalculateTotalWeight()
     {
-        int currency_type = Mathf.CeilToInt(Random.Range(3, amount_of_currency_types - 4));
+        float TotalWeight = 0;
+        for (int i = 0; i < spawnweight.Length; i++)
+        {
+            TotalWeight += spawnweight[i];  // sum everything
+        }
+        return TotalWeight;
+        
+    }
+
+private int RollCurrencyType()
+{
+        int currency_type = 1;
+        float upperlimit = 0;
+        float lowerlimit = 0;
+
+        # region 1. Determine total weight of all elements 
+
+        float Totalweight = CalculateTotalWeight();
+        // Totalweight = sum of all elements in spawnweight
+        #endregion
+
+        #region 2. Roll number within the total weight
+
+        int weightroll = Mathf.CeilToInt(Random.Range(0, Totalweight));
+
+        #endregion
+
+        #region F. Pick currency type based on roll
+        /*
+        OLD CODE
+        if(weightroll <= spawnweight[1])
+        {
+            currency_type = 1; // Roll Alteration orb
+            return currency_type;
+        }
+
+        if(weightroll <= (spawnweight[1] + spawnweight[2]) 
+        && weightroll > spawnweight[1])
+        {
+            currency_type = 2; // Roll Jeweller Orb
+            return currency_type;
+        }
+
+        if(weightroll <= (spawnweight[1] + spawnweight[2] + spawnweight[3])
+        && weightroll > (spawnweight[1] + spawnweight[2]))
+        {
+            currency_type = 3; // Roll Chromatic Orb
+            return currency_type;
+        }
+
+        if(weightroll <= (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4]) 
+        && weightroll > (spawnweight[1] + spawnweight[2] + spawnweight[3]))
+        {
+            currency_type = 4; // Roll Alchemy Orb
+            return currency_type;
+        }
+
+        if (weightroll <= (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5])
+        && weightroll > (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4]))
+        {
+            currency_type = 5; // Roll Orb of Fusing
+            return currency_type;
+        }
+
+        if(weightroll <= (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5] + spawnweight[6])
+        && weightroll > (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5]))
+        {
+            currency_type = 6; // Roll Regal Orb
+            return currency_type;
+        }
+
+        if(weightroll <= (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5] + spawnweight[6] + spawnweight[7])
+        && weightroll > (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5] + spawnweight[6]))
+        {
+            currency_type = 7; // Roll Orb Of Regret
+            return currency_type;
+        }
+
+        if (weightroll <= (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5] + spawnweight[6] + spawnweight[7] + spawnweight[8])
+        && weightroll > (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5] + spawnweight[6] + spawnweight[7]))
+        {
+            currency_type = 8; // Roll Vaal Orb
+            return currency_type;
+        }
+
+        if (weightroll <= (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5] + spawnweight[6] + spawnweight[7] + spawnweight[8] + spawnweight[9])
+        && weightroll > (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5] + spawnweight[6] + spawnweight[7] + spawnweight[8]))
+        {
+            currency_type = 9; // Roll Chaos Orb
+            return currency_type;
+        }
+
+        if (weightroll <= (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5] + spawnweight[6] + spawnweight[7] + spawnweight[8] + spawnweight[9] + spawnweight[10])
+        && weightroll > (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5] + spawnweight[6] + spawnweight[7] + spawnweight[8] + spawnweight[9]))
+        {
+            currency_type = 10; // Roll Divine Orb
+            return currency_type;
+        }
+
+        if (weightroll <= (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5] + spawnweight[6] + spawnweight[7] + spawnweight[8] + spawnweight[9] + spawnweight[10] + spawnweight[11])
+        && weightroll > (spawnweight[1] + spawnweight[2] + spawnweight[3] + spawnweight[4] + spawnweight[5] + spawnweight[6] + spawnweight[7] + spawnweight[8] + spawnweight[9] + spawnweight[10]))
+        {
+            currency_type = 11; // Roll Exalted Orb
+            return currency_type;
+        }
+
+        */
+        #endregion
+
+        #region 3. Pick currency type based on roll v.2
+
+        for (int i = 1; i <= 11; i++)
+        {
+            lowerlimit += spawnweight[i-1]; // increase lower limit of range check to upper limit from previous iteration
+            upperlimit += spawnweight[i];   // increase upper limit by weight of currenct element
+
+            if (weightroll <= upperlimit
+             && weightroll > lowerlimit)
+            {
+                currency_type = i; // Roll Selected currencytype
+                return currency_type;
+            }
+
+        }
+
+        #endregion
 
         return currency_type;
+
     }
 
     #endregion
+
+#region UI functions
+
+private void UpdateProbabilities()
+{
+
+    float Totalweight = CalculateTotalWeight();
+    for (int i = 1; i <= 11; i++)
+    {
+            float p = (100 * spawnweight[i]) / Totalweight;
+            probabilities_display[i].text = p.ToString("F2") + " %";
+    }    
+    
+}
+
+#endregion
 
 }
 
 [System.Serializable]
 public class Tile
 { 
-    public int currency_type;//0 - x -> ta wartosc odpowiada za rodzaj currency
+    public int currency_type;   //0 - x -> ta wartosc odpowiada za rodzaj currency
     public Point index;
     TilePiece piece;
     public Tile(int v, Point i)

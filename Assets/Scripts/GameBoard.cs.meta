@@ -26,7 +26,7 @@ MonoImporter:
   - Tile_Piece: {instanceID: 0}
   - HeraldBoom: {fileID: 8830106604419605011, guid: 0df050d0985aeeb4e811d262c8616c35,
       type: 3}
-  - AbyssalBoom: {fileID: 8830106604419605011, guid: 0df050d0985aeeb4e811d262c8616c35,
+  - AbyssalBoom: {fileID: 3572085029792750086, guid: 4d47cc347a5faf3438d1ce5bae20a594,
       type: 3}
   - Herald_Shatter: {instanceID: 0}
   - Abyssal_Explosion: {instanceID: 0}

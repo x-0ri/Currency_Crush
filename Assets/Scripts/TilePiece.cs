@@ -8,19 +8,21 @@ public class TilePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public int currency_type;   //0 - x -> ta wartosc odpowiada za rodzaj currency
     public Point index;
+    public bool updating;
+    Image img;
 
     [HideInInspector]
     public Vector2 pos;     //vector of destination
     [HideInInspector]
     public RectTransform rect;
 
-    public bool updating;
-    Image img;
+    
 
-    private Vector2 velocity;                    //default speed of falling element
-    private Vector2 move_direction;              //initiate velocity related vector
-    private readonly float a = 1f;            //artificial gravitation acceleration constant, subject to change if needed
-
+    private Vector2 velocity;                    // speed vector of falling element
+    private Vector2 move_direction;              // direction related vector
+    private readonly float a = 0.45f;            // artificial gravitation acceleration constant. Subject to change if needed.
+    private readonly float eps = 10f;            // "snapping constant" used to check if moving element is in required approximation. Subject to change if needed.
+    
     public void Initialize(int v, Point p, Sprite orb)
     {
         img = GetComponent<Image>();
@@ -48,11 +50,11 @@ public class TilePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     } //Tworzenie nazwy obiektu w grze
     public bool UpdatePiece() // funkcja zwracająca true jeżeli element jest w ruchu i false jeżeli jest w miejscu
     {
-        if (Vector2.Distance(rect.anchoredPosition, pos) > 11) // jeżeli długość wektora róznicy starej i nowej poycji jest > 1 to : (jest w ruchu)
+        if (Vector2.Distance(rect.anchoredPosition, pos) > eps) // jeżeli długość wektora róznicy starej i nowej poycji jest > 1 to : (jest w ruchu)
         {
-            GravityInterpolation(pos);    // wywołaj funkcje moveposition z parametrem pos
-            updating = true;        // return yrue for updating -> piece is moving
-            return true;            // funkcja zwraca true
+            GravityInterpolation(pos);  // wywołaj funkcje moveposition z parametrem pos
+            updating = true;            // return yrue for updating -> piece is moving
+            return true;                // funkcja zwraca true
         }
         else // jeżeli długość wektora róznicy starej i nowej poycji jest > 1 to : (nie jest w ruchu)
         {
@@ -70,18 +72,19 @@ public class TilePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         rect.anchoredPosition = Vector2.Lerp(rect.anchoredPosition, moveto, 0.13f);
     }
 
-    public void GravityInterpolation(Vector2 moveto)            //gravitation based interpolation, does not deaccelerate when closing in, unlike Lerp function
+    public void GravityInterpolation(Vector2 moveto)                        //gravitation based interpolation, does not deaccelerate when closing in, unlike Lerp function
     {
-        move_direction.x = 0;
-        if (moveto.x - rect.anchoredPosition.x > 0) move_direction.x = 1;         
-        if (moveto.x - rect.anchoredPosition.x < 0) move_direction.x = -1;
+        move_direction.x = 0;                                               // set direction parameters dependent on direction of movement.
+        if (moveto.x - rect.anchoredPosition.x > 0) move_direction.x = 1;   // Normally there should be sin and cos values of angles,         
+        if (moveto.x - rect.anchoredPosition.x < 0) move_direction.x = -1;  // but movement of elements in this game is always orthogonal
 
         move_direction.y = 0;
         if (moveto.y - rect.anchoredPosition.y > 0) move_direction.y = 1;
         if (moveto.y - rect.anchoredPosition.y < 0) move_direction.y = -1;
 
-        velocity.x += a * move_direction.x;     // x component of velocity vector REQUIRES RESET WHEN MOVEMENT STOPS
-        velocity.y += a * move_direction.y;     // y component of velocity vector REQUIRES RESET WHEN MOVEMENT STOPS
+        if (velocity.x + a < eps) velocity.x += a * move_direction.x;       //  check is max velocity will be reached in next frame                                                                                    
+        if (velocity.y + a < eps) velocity.y += a * move_direction.y;       //  if not, increase velocity by a
+               
         rect.anchoredPosition += velocity;
 
     }
