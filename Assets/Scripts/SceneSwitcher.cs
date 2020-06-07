@@ -6,10 +6,29 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitcher : MonoBehaviour
 {
-    public void SelectScene(string scene)   //utworz klase z wymaganym parametrem typu string
+    public void ExitGame()
     {
-        SceneManager.LoadScene(scene);      //wywolaj funkcje zmieniajaca scene na taka o nazwie podanej wczesniej "scene"
-        Debug.Log("Player switched scene to " + scene);
+        Debug.Log("Player has quit the game");
+        Application.Quit();
     }
 
+    public void SaveAndExit()
+    {
+        SaveGame.Save();
+        SceneManager.LoadScene("PlayLoadMenu");
+        Debug.Log("Player used Save & Exit ");
+    }
+
+    public void NewGame()
+    {
+        Debug.Log("Player started new game ");
+        SceneManager.LoadScene("Game");
+    }
+
+    public void ContinueGame()
+    {
+        GameBoard._LOADEDGAME = true;
+        Debug.Log("Player continued game");
+        SceneManager.LoadScene("Game");
+    }
  }

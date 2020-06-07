@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameBoard : MonoBehaviour
-{   
+{
+    public static bool _LOADEDGAME;
 
     #region Initialization_of_components
 
@@ -18,7 +19,7 @@ public class GameBoard : MonoBehaviour
     public bool RNG_Viewer_ON = false;
     public Button ButtonRNG_View;
     public Text[] probabilities_display = new Text[13];
-    public LevelSystem lvl;    
+
     #endregion
 
     #region PowerUps
@@ -30,14 +31,15 @@ public class GameBoard : MonoBehaviour
     public Image JewellerCooldownImage;
     readonly int JewellerPowerUpRequirements = 200;
     [HideInInspector]
-    int JewellerPowerUpProgress;
+    public static int JewellerPowerUpProgress;
     [HideInInspector]
-    int JewellerPowerUpsAmount;
+    public static int JewellerPowerUpsAmount;
     [HideInInspector]
-    static public bool UsingJeweller = false;
+    public static bool UsingJeweller = false;
     public static Point JewellerPowerUpPointIndex;
     [HideInInspector] 
-    public float JewellerCooldown;
+    public static float JewellerCooldown;
+
 
 
 
@@ -48,11 +50,11 @@ public class GameBoard : MonoBehaviour
     public Image RegretCooldownImage;
     readonly int RegretPowerUpRequirements = 72;
     [HideInInspector]
-    int RegretPowerUpProgress;
+    public static int RegretPowerUpProgress;
     [HideInInspector]
-    int RegretPowerUpsAmount;
+    public static int RegretPowerUpsAmount;
     [HideInInspector] 
-    public float RegretCooldown;
+    public static float RegretCooldown;
 
 
 
@@ -64,13 +66,13 @@ public class GameBoard : MonoBehaviour
     public Image VaalCooldownImage;
     readonly int VaalPowerUpRequirements = 10;
     [HideInInspector]
-    int VaalPowerUpProgress;
+    public static int VaalPowerUpProgress;
     [HideInInspector]
-    int VaalPowerUpsAmount;
+    public static int VaalPowerUpsAmount;
     public static List<Point> VaalPowerUpIndexes;
     int VaalPowerUpEvent = 666;
     [HideInInspector]
-    public float VaalCooldown;
+    public static float VaalCooldown;
 
 
 
@@ -81,13 +83,13 @@ public class GameBoard : MonoBehaviour
     public Image ExaltedCooldownImage;
     readonly int ExaltedPowerUpRequirements = 120;
     [HideInInspector]
-    public int ExaltedPowerUpProgress;
+    public static int ExaltedPowerUpProgress;
     [HideInInspector]
-    int ExaltedPowerUpsAmount;
+    public static int ExaltedPowerUpsAmount;
     public static List<Point> ExaltedPowerUpIndexes;
-    int ExaltedPowerUpEvent = 0;
+    public static int ExaltedPowerUpEvent = 0;
     [HideInInspector]
-    public float ExaltedCooldown;
+    public static float ExaltedCooldown;
 
 
     static public bool usedMouse = false;
@@ -101,14 +103,21 @@ public class GameBoard : MonoBehaviour
     public GameObject HeraldBoom;
     public GameObject AbyssalBoom;
 
-    static readonly int board_size = 12;    // inicjalizacja wielkości planszy
+    public static readonly int board_size = 12;    // inicjalizacja wielkości planszy
     int[] fills;
-    Tile[,] Tile; //inicjalizacja matrycy elementów
+    static Tile[,] Tile; //inicjalizacja matrycy elementów
 
     private readonly Point dead_bin = new Point(12, 11);    // create dummy point to store dead pieces
 
     public static float[] spawnweight;                               // create array of weights of elements for spawn chance manipulation
-    
+
+    [HideInInspector]
+    public static int TotalDestroyedOrbsCounter;
+    [HideInInspector]
+    public static int ComboCounter;
+    [HideInInspector]
+    public static int[,] LoadCurrency = new int[board_size,board_size];
+
     #endregion
 
     #region Data_Tracking + Debugging
@@ -128,10 +137,7 @@ public class GameBoard : MonoBehaviour
     public Text finishedupdating_log;
     public static bool DEBUG;
     public static bool HAX;
-    [HideInInspector]
-    public int TotalDestroyedOrbsCounter;
-    [HideInInspector]
-    public int ComboCounter;
+ 
 
     #endregion
 
@@ -196,6 +202,55 @@ public class GameBoard : MonoBehaviour
 
         big_oomph = false;
 
+        #region Load Game if continued
+
+        if (_LOADEDGAME)
+        {
+            LoadGame.Load();
+
+            // EVEN AFTER USING LOAD FUNCTION, CURRENCY TYPES NEED TO BE SWITCHED MANUALLY
+
+            for (int x = 0; x < GameBoard.board_size; x++)
+            {
+                for (int y = 0; y < GameBoard.board_size; y++)
+                {
+                    Point p = new Point(x, y);
+                    int c = LoadCurrency[x, y];
+                    Tile Load_Tile = GetTileAtPoint(p);
+                    TilePiece Load_Tilepiece = Load_Tile.GetPiece();
+                    Load_Tilepiece.Initialize(c, p, Orbs[c]);
+                    Load_Tile.SetPiece(Load_Tilepiece);
+                }
+            }
+
+            Score.text = TotalDestroyedOrbsCounter.ToString();
+            ComboBreaker.text = "+ " + ComboCounter.ToString();
+
+            #region Load powerups
+
+            if (JewellerPowerUpsAmount > 0) JewellerPowerUpsAmountText.text = (JewellerPowerUpsAmount.ToString());   
+            JewellerPowerUp.value = JewellerPowerUpProgress;
+            JewellerCooldownImage.fillAmount = JewellerCooldown;
+
+            if (VaalPowerUpsAmount > 0) VaalPowerUpsAmountText.text = (VaalPowerUpsAmount.ToString());
+            VaalPowerUp.value = VaalPowerUpProgress;
+            VaalCooldownImage.fillAmount = VaalCooldown;
+
+            if (RegretPowerUpsAmount > 0) RegretPowerUpsAmountText.text = (RegretPowerUpsAmount.ToString());
+            RegretPowerUp.value = RegretPowerUpProgress;
+            RegretCooldownImage.fillAmount = RegretCooldown;
+
+            if (ExaltedPowerUpsAmount > 0) ExaltedPowerUpsAmountText.text = (ExaltedPowerUpsAmount.ToString());
+            ExaltedPowerUp.value = ExaltedPowerUpProgress;
+            ExaltedCooldownImage.fillAmount = ExaltedCooldown;
+
+            #endregion
+
+            _LOADEDGAME = false;
+        }
+
+        #endregion
+
     }
 
     void Update()
@@ -207,7 +262,6 @@ public class GameBoard : MonoBehaviour
         
         if (HAX && Input.GetKeyDown("e") && CheckIfBoardIsStatic()) PowerUp_Exalted_Shortcut();
         if (HAX && Input.GetKeyDown("v") && CheckIfBoardIsStatic()) PowerUp_VaalOrb_ShortCut();
-        if (HAX && Input.GetKeyDown("l")) lvl.Exp = lvl.ExpBar.maxValue;
         if (HAX && Input.GetKeyDown("r")) RerollBoard();
 
         #endregion
@@ -978,7 +1032,7 @@ public class GameBoard : MonoBehaviour
         tilepiece.gameObject.SetActive(false);                              // deactivate piece, so it does not render
         TotalDestroyedOrbsCounter++;                                        // increase score
         Score.text = TotalDestroyedOrbsCounter.ToString();                  // update score on board
-        lvl.Exp++;                                                          // increase exp
+        LevelSystem.Exp++;                                                          // increase exp
 
     }
     public void ApplyGravityToBoard()
@@ -1607,7 +1661,6 @@ public class GameBoard : MonoBehaviour
             for (int y = 0; y < board_size; y++)    
             {
                 Point p = new Point(x, y);
-                int val; // = GetCurrencyTypeAtPoint(p);
 
                 toreroll = new List<int>();
                 while (IsConnected(p, true).Count > 0)      // as long as there are connected pieces in rerolled board :
@@ -1740,7 +1793,7 @@ public class GameBoard : MonoBehaviour
         if (p.x > 11 || p.y > 11) Debug.Log("OUT OF ARRAY BOUNDS : " + p.x + "," + p.y);
         return Tile[p.x, p.y];
     }
-    int GetCurrencyTypeAtPoint(Point p)
+    public int GetCurrencyTypeAtPoint(Point p)
     {
         if (p.x < 0 || p.x >= board_size || p.y < 0 || p.y >= board_size) return -1;
         return Tile[p.x, p.y].currency_type;
@@ -1767,6 +1820,11 @@ public class GameBoard : MonoBehaviour
         }
     }
 
+    public static int LoadCurrencyTypeFromPoint(Point p)
+    {
+        int c = Tile[p.x,p.y].currency_type;
+        return c;
+    }
 #endregion
 
 #region Piece_Related

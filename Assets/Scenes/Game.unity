@@ -1264,7 +1264,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Exit
+  m_Text: Save & Exit
 --- !u!222 &488976037
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3616,8 +3616,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1771001910}
-        m_MethodName: SelectScene
-        m_Mode: 5
+        m_MethodName: SaveAndExit
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -5852,6 +5852,7 @@ GameObject:
   - component: {fileID: 1609726078}
   - component: {fileID: 1609726077}
   - component: {fileID: 1609726079}
+  - component: {fileID: 1609726080}
   m_Layer: 0
   m_Name: Game_UI
   m_TagString: Untagged
@@ -5997,35 +5998,28 @@ MonoBehaviour:
   - {fileID: 296388130}
   - {fileID: 1159165469}
   - {fileID: 823434966}
-  lvl: {fileID: 1609726079}
   JewellerButton: {fileID: 1751246745}
   JewellerPowerUp: {fileID: 39002061}
   JewellerPowerUpsAmountText: {fileID: 1269043209}
   JewellerCooldownImage: {fileID: 1548374434}
-  JewellerCooldown: 0
   RegretButton: {fileID: 1449497091}
   RegretPowerUp: {fileID: 1406648245}
   RegretPowerUpsAmountText: {fileID: 817625523}
   RegretCooldownImage: {fileID: 1771134426}
-  RegretCooldown: 0
   VaalButton: {fileID: 1682569151}
   VaalPowerUp: {fileID: 1485720908}
   VaalPowerUpsAmountText: {fileID: 576119349}
   VaalCooldownImage: {fileID: 2135094631}
-  VaalCooldown: 0
   ExaltedButton: {fileID: 424801181}
   ExaltedPowerUp: {fileID: 318089890}
   ExaltedPowerUpsAmountText: {fileID: 93508871}
   ExaltedCooldownImage: {fileID: 1252711191}
-  ExaltedPowerUpProgress: 0
-  ExaltedCooldown: 0
   Tile_Piece: {fileID: 2797234931318261838, guid: 12e41153652695a4b9d8534133680b7d,
     type: 3}
   HeraldBoom: {fileID: 8830106604419605011, guid: 0df050d0985aeeb4e811d262c8616c35,
     type: 3}
   AbyssalBoom: {fileID: 3572085029792750086, guid: 4d47cc347a5faf3438d1ce5bae20a594,
     type: 3}
-  spawnweight: []
   Lists_Checkup: {fileID: 46685173}
   update_Log: {fileID: 1069867968}
   flipped_log: {fileID: 1479291063}
@@ -6034,9 +6028,6 @@ MonoBehaviour:
   matched_log: {fileID: 638462987}
   secondary_matched_log: {fileID: 1975127371}
   finishedupdating_log: {fileID: 661224583}
-  DEBUG: 0
-  TotalDestroyedOrbsCounter: 0
-  ComboCounter: 0
   Herald_Shatter: {fileID: 1283860389}
   Abyssal_Explosion: {fileID: 350104788}
   Sound_Count_Herald: 0
@@ -6069,9 +6060,18 @@ MonoBehaviour:
   ExpBar: {fileID: 1610776759}
   LevelCounter: {fileID: 1490692434}
   LevelUpSound: {fileID: 2003865825}
-  board: {fileID: 1609726077}
-  Level: 0
-  Exp: 0
+--- !u!114 &1609726080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609726072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6d788e6571d0d54a855f63b0d39d015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1610641273
 GameObject:
   m_ObjectHideFlags: 0

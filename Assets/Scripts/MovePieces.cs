@@ -27,7 +27,7 @@ public class MovePieces : MonoBehaviour
 
     public void DropPiece()
     {
-        game.ComboCounter = 0;
+        GameBoard.ComboCounter = 0;
         if (moving == null) return; // jeżeli bool moving ma wartość null
         //Debug.Log("Dropped");
         if (!NewIndex.Equals(moving.index))

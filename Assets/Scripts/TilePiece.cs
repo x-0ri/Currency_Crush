@@ -11,8 +11,9 @@ public class TilePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public bool updating;
     Image img;
 
+
     [HideInInspector]
-    public Vector2 pos;         // vector of destination
+    public Vector2 pos;                         // vector of destination
     [HideInInspector]
     public RectTransform rect;    
 

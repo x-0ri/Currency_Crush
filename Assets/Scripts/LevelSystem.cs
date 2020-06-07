@@ -9,30 +9,37 @@ public class LevelSystem : MonoBehaviour
     public Text LevelCounter;
     public AudioSource LevelUpSound;
 
-    public int Level;
-    public float Exp;
-    
-    private readonly float Base_Exp = 20;   // amount of exp for next level - default 20
-    private readonly float M = 1.26f;       // exponent base for level scaling
-    private readonly float C = 4;           // exponential coefficient used in formula
+    public static int Level;
+    public static string LevelTxt;
+    public static float Exp;
+    public static float NextLvl;
+
+    private readonly float Base_Exp = 20;       // amount of exp for next level - default 20
+    private readonly float M = 1.26f;           // exponent base for level scaling
+    private readonly float C = 4;               // exponential coefficient used in formula
 
     #region Weight modificators
     
-    public readonly float[] Milestone1 = new float[] { 0, 16,  16, 16, 16, 16, 32,     16,     8,      8,      4,  1, 0 };
-    public readonly float[] Milestone2 = new float[] { 0, 8,   8,  10, 16, 50, 40,     30,     20,     10,     8,  2, 0 };
-    public readonly float[] Milestone3 = new float[] { 0, 4,   4,  5,  16, 50, 100,    100,    100,    100,    16, 4, 0 };
-    public readonly float[] Milestone4 = new float[] { 0, 2,   2,  2,  10, 10, 100,    100,    100,    100,    32, 8, 0 };
-    public readonly float[] Milestone5 = new float[] { 0, 1,   1,  1,  7,  10, 110,    110,    110,    110,    64, 16, 0 };
-    public readonly float[] Milestone6 = new float[] { 0, 0,   0,  0,  5,  10, 90,     90,     90,     90,     90, 32, 1 };
+    readonly float[] Milestone1 = new float[] { 0, 16,  16, 16, 16, 16, 32,     16,     8,      8,      4,  1, 0 };
+    readonly float[] Milestone2 = new float[] { 0, 8,   8,  10, 16, 50, 40,     30,     20,     10,     8,  2, 0 };
+    readonly float[] Milestone3 = new float[] { 0, 4,   4,  5,  16, 50, 100,    100,    100,    100,    16, 4, 0 };
+    readonly float[] Milestone4 = new float[] { 0, 2,   2,  2,  10, 10, 100,    100,    100,    100,    32, 8, 0 };
+    readonly float[] Milestone5 = new float[] { 0, 1,   1,  1,  7,  10, 110,    110,    110,    110,    64, 16, 0 };
+    readonly float[] Milestone6 = new float[] { 0, 0,   0,  0,  5,  10, 90,     90,     90,     90,     90, 32, 1 };
 
     #endregion
 
     void Start()
     {
-        ExpBar.maxValue = Base_Exp;
-        Exp = 0.01f;
-        Level = 1;
-        LevelCounter.text =  Level.ToString();
+        if (Level > 1) { LevelCounter.text = Level.ToString(); return; }
+
+        else
+        {
+            ExpBar.maxValue = Base_Exp;
+            Exp = 0;
+            Level = 1;
+            LevelCounter.text = Level.ToString();
+        }
     }
 
     // Update is called once per frame
@@ -56,6 +63,7 @@ public class LevelSystem : MonoBehaviour
         float coefficient = Mathf.Pow(M , (1 / (Level / C)));           // 3. Calculate coefficient for increase of required exp 
         float ToNextLevel = ExpBar.maxValue * coefficient;              // 4. Calculate next level req exp
         ExpBar.maxValue = ToNextLevel;                                  // 5. Set exp value on slider
+        NextLvl = ToNextLevel;                                          // extracting static for saving purposes
         Exp = carry;                                                    // 6. Reset xp and add carry from previous level
         ModifySpawnRate_Levelup(Level);
     }
